@@ -34,15 +34,19 @@ import traceback
 from base64 import b32decode
 from binascii import Error as BinasciiError
 from collections.abc import Mapping
+from dataclasses import asdict, dataclass
 from datetime import datetime, timedelta, timezone
-from typing import TypedDict
-from urllib.parse import quote
+from hashlib import sha256
+from secrets import compare_digest, randbelow
+from typing import Literal, TypedDict, cast
+from urllib.parse import quote, urlsplit
 
 from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import ec, padding
 from cryptography.hazmat.primitives.asymmetric.ec import EllipticCurvePublicKey
+from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicKey
 from dateutil.parser import isoparse
 
 from edumfa.api.lib.policyhelper import get_pushtoken_add_config
@@ -51,7 +55,12 @@ from edumfa.lib import _
 from edumfa.lib.apps import _construct_extra_parameters
 from edumfa.lib.challenge import get_challenges
 from edumfa.lib.config import get_from_config
-from edumfa.lib.crypto import generate_keypair, geturandom
+from edumfa.lib.crypto import (
+    decryptPassword,
+    encryptPassword,
+    generate_keypair,
+    geturandom,
+)
 from edumfa.lib.decorators import check_token_locked
 from edumfa.lib.error import (
     ConfigAdminError,
@@ -103,6 +112,8 @@ PUBLIC_KEY_SERVER = "public_key_server"
 PUBLIC_KEY_SMARTPHONE = "public_key_smartphone"
 PUSH_VERSION = "push_version"
 PUSH_UPGRADE = "push_upgrade"
+PUSH_MIGRATION = "push_migration"
+FIREBASE_TOKEN = "firebase_token"
 PUSH_UPGRADE_PATHS = {1: 2}
 POLLING_ALLOWED = "polling_allowed"
 GWTYPE = "edumfa.lib.smsprovider.FirebaseProvider.FirebaseProvider"
@@ -113,7 +124,17 @@ DELAY = 1.0
 POLL_TIME_WINDOW = 1
 UPDATE_FB_TOKEN_WINDOW = 5
 PUSH_UPGRADE_WINDOW = 5
+PUSH_MIGRATION_WINDOW = 5
+PUSH_MIGRATION_ATTEMPTS = 5
 POLL_ONLY = "poll only"
+
+MIGRATION_OPERATION_FIELDS = {
+    "begin_migration": ("timestamp", "signature"),
+    "pair_migration": ("nonce", "pubkey", "fbtoken", "signature"),
+    "confirm_migration": ("nonce", "candidate_id", "pairing_code", "signature"),
+    "cancel_migration": ("nonce", "signature"),
+    "migration_status": ("nonce", "timestamp", "signature"),
+}
 
 POST_OPERATION_FIELDS = {
     "complete_enrollment": ("enrollment_credential", "pubkey", "fbtoken"),
@@ -121,6 +142,7 @@ POST_OPERATION_FIELDS = {
     "update_firebase_token": ("new_fb_token", "timestamp", "signature"),
     "begin_upgrade": ("timestamp", "signature"),
     "confirm_upgrade": ("nonce", "signature"),
+    **MIGRATION_OPERATION_FIELDS,
 }
 
 
@@ -129,6 +151,28 @@ class PushUpgradeOffer(TypedDict):
     nonce: str
     expires_at: int
     confirmed: bool
+
+
+@dataclass
+class PushMigration:
+    nonce: str
+    expires_at: int
+    started_at: float
+    source_key_id: str
+    state: Literal["offered", "paired", "completed", "cancelled"] = "offered"
+    candidate_id: str = ""
+    pubkey: str = ""
+    fbtoken: str = ""
+    pairing_code: str = ""
+    device_auth: bool = False
+    attempts: int = 0
+
+    def finish(self, state: Literal["completed", "cancelled"]) -> None:
+        self.state = state
+        self.pubkey = ""
+        self.fbtoken = ""
+        self.pairing_code = ""
+        self.candidate_id = ""
 
 
 class PushAllowPolling:
@@ -851,6 +895,10 @@ class PushTokenClass(TokenClass):
                     raise ParameterError(
                         "Expected a boolean for 'require_device_auth'."
                     )
+            if operation in ("pair_migration", "confirm_migration"):
+                allowed.add("device_auth")
+                if not isinstance(request_data.get("device_auth"), bool):
+                    raise ParameterError("Expected a boolean for 'device_auth'.")
             if request_data.keys() - allowed:
                 raise ParameterError("Unexpected parameters for push operation.")
             for key in required:
@@ -879,6 +927,13 @@ class PushTokenClass(TokenClass):
             return True, {}
         if operation in ("begin_upgrade", "confirm_upgrade"):
             return True, cls._upgrade_version(serial, operation, request_data, g)
+        if operation in MIGRATION_OPERATION_FIELDS:
+            if g is not None:
+                setattr(g, "edupush_migration", (operation, False))
+            result, details = cls._migrate_device(serial, operation, request_data, g)
+            if g is not None:
+                setattr(g, "edupush_migration", (operation, result))
+            return result, details
         raise ParameterError("Unknown push operation.")
 
     @classmethod
@@ -930,9 +985,8 @@ class PushTokenClass(TokenClass):
         signature = getParam(request_data, "signature")
         decline = is_true(getParam(request_data, "decline", default=False))
         token = cls._get_post_token(serial, explicit)
-        pubkey_obj = _build_verify_object(token.get_tokeninfo(PUBLIC_KEY_SMARTPHONE))
-        challenges = get_challenges(serial=serial, challenge=challenge)
-        if not challenges:
+        public_key = token.get_tokeninfo(PUBLIC_KEY_SMARTPHONE)
+        if not public_key:
             return False
 
         if explicit:
@@ -945,18 +999,38 @@ class PushTokenClass(TokenClass):
                 sign_data += "|decline"
 
         try:
-            cls.verify_signature(pubkey_obj, sign_data, signature)
-        except (InvalidSignature, ValueError):
+            cls.verify_signature(_build_verify_object(public_key), sign_data, signature)
+        except (InvalidSignature, TypeError, ValueError):
             return False
 
-        for chal in challenges:
-            log.debug(f"Found matching challenge {chal}.")
-            if decline:
-                chal.set_data("challenge_declined")
+        try:
+            if cls.get_class_type() == "edupush":
+                records = cls._lock_device_binding(token.token.id)
+                key = records.get(PUBLIC_KEY_SMARTPHONE)
+                if key is None or key.Value != public_key:
+                    db.session.rollback()
+                    return False
+                challenges = (
+                    Challenge.query.filter_by(serial=serial, challenge=challenge)
+                    .with_for_update()
+                    .populate_existing()
+                    .all()
+                )
             else:
-                chal.set_otp_status(True)
-            chal.save()
-        return True
+                challenges = get_challenges(serial=serial, challenge=challenge)
+            for chal in challenges:
+                log.debug(f"Found matching challenge {chal}.")
+                if decline:
+                    chal.set_data("challenge_declined")
+                else:
+                    chal.set_otp_status(True)
+                if cls.get_class_type() != "edupush":
+                    chal.save()
+            db.session.commit()
+            return bool(challenges)
+        except Exception:
+            db.session.rollback()
+            raise
 
     @classmethod
     def _update_firebase_token(
@@ -968,31 +1042,49 @@ class PushTokenClass(TokenClass):
         new_fb_token = getParam(request_data, "new_fb_token", optional=False)
         try:
             token = cls._get_post_token(serial, explicit)
-            pubkey_obj = _build_verify_object(
-                token.get_tokeninfo(PUBLIC_KEY_SMARTPHONE)
-            )
+            public_key = token.get_tokeninfo(PUBLIC_KEY_SMARTPHONE)
             if explicit:
                 sign_data = cls._operation_signing_data(
                     "update_firebase_token", serial, new_fb_token, timestamp
                 )
             else:
                 sign_data = f"{new_fb_token}|{serial}|{timestamp}"
-            cls.verify_signature(pubkey_obj, sign_data, signature)
-            token.add_tokeninfo("firebase_token", new_fb_token)
+            cls.verify_signature(_build_verify_object(public_key), sign_data, signature)
+            if cls.get_class_type() == "edupush":
+                records = cls._lock_device_binding(token.token.id, FIREBASE_TOKEN)
+                key = records.get(PUBLIC_KEY_SMARTPHONE)
+                if key is None or key.Value != public_key:
+                    raise eduMFAError("Could not verify signature!")
+                firebase = records.get(FIREBASE_TOKEN)
+                if firebase is None:
+                    db.session.add(
+                        TokenInfo(token.token.id, FIREBASE_TOKEN, new_fb_token)
+                    )
+                else:
+                    firebase.Value = new_fb_token
+                db.session.commit()
+            else:
+                token.add_tokeninfo(FIREBASE_TOKEN, new_fb_token)
         except (
             ResourceNotFoundError,
             ParameterError,
             TypeError,
             InvalidSignature,
             ConfigAdminError,
+            AttributeError,
+            TypeError,
             ValueError,
         ) as e:
+            db.session.rollback()
             # Use the same signature error when the token cannot be found.
             log.debug(traceback.format_exc())
             log.info(
                 f'The following error occurred during the signature check: "{e!r}"'
             )
             raise eduMFAError("Could not verify signature!")
+        except Exception:
+            db.session.rollback()
+            raise
 
     @staticmethod
     def _operation_signing_data(operation: str, *fields: str | int | bool) -> str:
@@ -1048,30 +1140,7 @@ class PushTokenClass(TokenClass):
 
         try:
             token_id = token.token.id
-            # Take a write lock even on SQLite before reading upgrade state.
-            matched = Token.query.filter(
-                Token.id == token_id,
-                Token.tokentype == cls.get_class_type(),
-                Token.rollout_state == ROLLOUTSTATE.ENROLLED,
-                Token.active.is_(True),
-                Token.locked.is_not(True),
-                Token.revoked.is_not(True),
-            ).update({Token.active: Token.active}, synchronize_session=False)
-            if not matched:
-                raise ParameterError("This token cannot be upgraded.")
-
-            records = {
-                row.Key: row
-                for row in TokenInfo.query.filter(
-                    TokenInfo.token_id == token_id,
-                    TokenInfo.Key.in_(
-                        (PUSH_VERSION, PUSH_UPGRADE, PUBLIC_KEY_SMARTPHONE)
-                    ),
-                )
-                .with_for_update()
-                .populate_existing()
-                .all()
-            }
+            records = cls._lock_device_binding(token_id, PUSH_VERSION, PUSH_UPGRADE)
             key_record = records.get(PUBLIC_KEY_SMARTPHONE)
             if key_record is None or key_record.Value != public_key:
                 raise eduMFAError("Could not verify signature!")
@@ -1218,6 +1287,309 @@ class PushTokenClass(TokenClass):
         return {"push_version": target}
 
     @classmethod
+    def _lock_device_binding(cls, token_id: int, *keys: str) -> dict[str, TokenInfo]:
+        query = Token.query.filter(
+            Token.id == token_id,
+            Token.tokentype == cls.get_class_type(),
+            Token.rollout_state == ROLLOUTSTATE.ENROLLED,
+            Token.active.is_(True),
+            Token.locked.is_not(True),
+            Token.revoked.is_not(True),
+        )
+        # A write also serializes these operations on SQLite.
+        if not query.update({Token.active: Token.active}, synchronize_session=False):
+            raise eduMFAError("Could not verify signature!")
+        records = (
+            TokenInfo.query.filter(
+                TokenInfo.token_id == token_id,
+                TokenInfo.Key.in_((PUBLIC_KEY_SMARTPHONE, *keys)),
+            )
+            .with_for_update()
+            .populate_existing()
+            .all()
+        )
+        return {record.Key: record for record in records}
+
+    @classmethod
+    def _migrate_device(
+        cls,
+        serial: str,
+        operation: str,
+        request_data: Mapping[str, object],
+        g: object | None,
+    ) -> tuple[bool, dict[str, object]]:
+        fields = {
+            key: cast(str, request_data[key])
+            for key in MIGRATION_OPERATION_FIELDS[operation]
+        }
+        if any(len(value) > 2048 for value in fields.values()):
+            raise ParameterError("Invalid push migration parameters.")
+        if "timestamp" in fields:
+            cls._check_timestamp_in_range(fields["timestamp"], PUSH_MIGRATION_WINDOW)
+
+        try:
+            token = cls._get_post_token(serial, True, ROLLOUTSTATE.ENROLLED)
+            audience = get_action_values_from_options(
+                SCOPE.ENROLL,
+                cls.PUSH_ACTION.REGISTRATION_URL,
+                options={"g": g, "user": token.user},
+            )
+            if not isinstance(audience, str):
+                raise PolicyError("Push migration requires an HTTPS registration URL.")
+            url = urlsplit(audience)
+            if (
+                url.scheme != "https"
+                or not url.hostname
+                or url.username
+                or url.fragment
+            ):
+                raise PolicyError("Push migration requires an HTTPS registration URL.")
+
+            requires_device_auth = (
+                g is not None
+                and Match.user(
+                    g,
+                    scope=SCOPE.ENROLL,
+                    action=f"{cls.get_class_type()}_{ACTION.FORCE_APP_PIN}",
+                    user_object=token.user,
+                ).any()
+            )
+            signed_fields: list[str | bool] = [
+                value for key, value in fields.items() if key != "signature"
+            ]
+            device_auth = request_data.get("device_auth") is True
+            if operation in ("pair_migration", "confirm_migration"):
+                signed_fields.append(device_auth)
+            signed_data = cls._operation_signing_data(
+                operation, serial, audience, *signed_fields
+            )
+
+            records = cls._lock_device_binding(
+                token.token.id, PUSH_MIGRATION, FIREBASE_TOKEN, PUSH_VERSION
+            )
+            version = records.get(PUSH_VERSION)
+            key = records.get(PUBLIC_KEY_SMARTPHONE)
+            if key is None or version is None or version.Value != "2":
+                raise eduMFAError("Could not verify signature!")
+            record = records.get(PUSH_MIGRATION)
+            migration = (
+                PushMigration(**json.loads(decryptPassword(record.Value)))
+                if record is not None
+                else None
+            )
+            source_key_id = sha256(key.Value.encode("utf-8")).hexdigest()
+            if (
+                migration is not None
+                and migration.state != "completed"
+                and migration.source_key_id != source_key_id
+            ):
+                migration = None
+            now = int(time.time())
+            if operation == "begin_migration":
+                cls.verify_signature(
+                    _build_verify_object(key.Value), signed_data, fields["signature"]
+                )
+                started_at = isoparse(fields["timestamp"])
+                if started_at.tzinfo is None:
+                    started_at = started_at.replace(tzinfo=timezone.utc)
+                started = started_at.timestamp()
+                if (
+                    migration is not None
+                    and migration.state != "completed"
+                    and started < migration.started_at
+                ):
+                    raise ParameterError("Start a new push migration request.")
+                if (
+                    migration is None
+                    or migration.expires_at <= now
+                    or migration.state in ("completed", "cancelled")
+                ):
+                    if (
+                        migration is not None
+                        and migration.state != "completed"
+                        and started == migration.started_at
+                    ):
+                        raise ParameterError("Start a new push migration request.")
+                    migration = PushMigration(
+                        nonce=geturandom(32, hex=True),
+                        expires_at=now + 60 * PUSH_MIGRATION_WINDOW,
+                        started_at=started,
+                        source_key_id=source_key_id,
+                    )
+                result = True
+                details: dict[str, object] = {
+                    "nonce": migration.nonce,
+                    "expires_at": migration.expires_at,
+                    "registration_url": audience,
+                    "require_device_auth": requires_device_auth,
+                }
+            else:
+                if (
+                    migration is None
+                    or migration.expires_at <= now
+                    or not compare_digest(
+                        migration.nonce.encode(), fields["nonce"].encode()
+                    )
+                ):
+                    raise ParameterError("This push migration is invalid or expired.")
+
+                if operation == "pair_migration":
+                    cls._pair_device(
+                        migration,
+                        fields,
+                        signed_data,
+                        key.Value,
+                        device_auth,
+                        requires_device_auth,
+                    )
+                    result = True
+                    details = {
+                        "pairing_code": migration.pairing_code,
+                        "public_key": token.get_init_detail()["public_key"],
+                    }
+                else:
+                    status = operation == "migration_status"
+                    try:
+                        cls.verify_signature(
+                            _build_verify_object(key.Value),
+                            signed_data,
+                            fields["signature"],
+                        )
+                    except InvalidSignature:
+                        if not status or migration.state != "paired":
+                            raise
+                        cls.verify_signature(
+                            _build_verify_object(migration.pubkey),
+                            signed_data,
+                            fields["signature"],
+                        )
+                    result = True
+                    if status:
+                        details = {"state": migration.state}
+                        if migration.state == "paired":
+                            details["candidate_id"] = migration.candidate_id
+                    elif (
+                        operation == "cancel_migration"
+                        and migration.state != "completed"
+                    ):
+                        migration.finish("cancelled")
+                        details = {"state": migration.state}
+                    elif (
+                        operation == "confirm_migration" and migration.state == "paired"
+                    ):
+                        result = cls._confirm_device_migration(
+                            migration,
+                            fields,
+                            records,
+                            serial,
+                            device_auth,
+                            requires_device_auth,
+                            now,
+                        )
+                        details = {"state": migration.state}
+                    else:
+                        raise ParameterError("This push migration is unavailable.")
+
+            if operation != "migration_status":
+                stored = encryptPassword(json.dumps(asdict(migration)))
+                if record is None:
+                    db.session.add(TokenInfo(token.token.id, PUSH_MIGRATION, stored))
+                else:
+                    record.Value = stored
+            db.session.commit()
+        except (ResourceNotFoundError, InvalidSignature, TypeError, ValueError):
+            db.session.rollback()
+            raise eduMFAError("Could not verify signature!") from None
+        except Exception:
+            db.session.rollback()
+            raise
+
+        return result, {"migration": details}
+
+    @classmethod
+    def _pair_device(
+        cls,
+        migration: PushMigration,
+        fields: Mapping[str, str],
+        signed_data: str,
+        public_key: str,
+        device_auth: bool,
+        requires_device_auth: bool,
+    ) -> None:
+        candidate_key = _build_verify_object(fields["pubkey"])
+        if not (
+            isinstance(candidate_key, RSAPublicKey)
+            and 2048 <= candidate_key.key_size <= 4096
+            or isinstance(candidate_key, EllipticCurvePublicKey)
+            and isinstance(
+                candidate_key.curve,
+                (ec.SECP256R1, ec.SECP384R1, ec.SECP521R1),
+            )
+        ):
+            raise ParameterError("Unsupported replacement device key.")
+        cls.verify_signature(candidate_key, signed_data, fields["signature"])
+        normalized_key = strip_key(
+            candidate_key.public_bytes(
+                serialization.Encoding.PEM,
+                serialization.PublicFormat.SubjectPublicKeyInfo,
+            ).decode("ascii")
+        )
+        if _build_verify_object(public_key).public_bytes(
+            serialization.Encoding.DER,
+            serialization.PublicFormat.SubjectPublicKeyInfo,
+        ) == candidate_key.public_bytes(
+            serialization.Encoding.DER,
+            serialization.PublicFormat.SubjectPublicKeyInfo,
+        ):
+            raise ParameterError("Push migration requires a new device key.")
+        if requires_device_auth and not device_auth:
+            raise PolicyError("Device authentication is required on the new phone.")
+        candidate_id = sha256(signed_data.encode("utf-8")).hexdigest()
+        if migration.state == "offered":
+            migration.state = "paired"
+            migration.candidate_id = candidate_id
+            migration.pubkey = normalized_key
+            migration.fbtoken = fields["fbtoken"]
+            migration.device_auth = device_auth
+            migration.pairing_code = f"{randbelow(1_000_000):06d}"
+        elif migration.state != "paired" or migration.candidate_id != candidate_id:
+            raise ParameterError(
+                "This push migration already has a candidate or has ended."
+            )
+
+    @staticmethod
+    def _confirm_device_migration(
+        migration: PushMigration,
+        fields: Mapping[str, str],
+        records: Mapping[str, TokenInfo],
+        serial: str,
+        device_auth: bool,
+        requires_device_auth: bool,
+        now: int,
+    ) -> bool:
+        if not device_auth or (requires_device_auth and not migration.device_auth):
+            raise PolicyError("Device authentication is required for push migration.")
+        if migration.candidate_id != fields["candidate_id"]:
+            raise ParameterError("The replacement device does not match.")
+        if not compare_digest(
+            migration.pairing_code.encode(),
+            fields["pairing_code"].encode(),
+        ):
+            migration.attempts += 1
+            if migration.attempts >= PUSH_MIGRATION_ATTEMPTS:
+                migration.finish("cancelled")
+            return False
+        firebase = records.get(FIREBASE_TOKEN)
+        if firebase is None:
+            raise ParameterError("This token has no push registration.")
+        firebase.Value = migration.fbtoken
+        records[PUBLIC_KEY_SMARTPHONE].Value = migration.pubkey
+        Challenge.query.filter_by(serial=serial).delete(synchronize_session=False)
+        migration.finish("completed")
+        migration.expires_at = now + 60 * PUSH_MIGRATION_WINDOW
+        return True
+
+    @classmethod
     def verify_signature(cls, pubkey_obj, sign_data, signature):
         if isinstance(pubkey_obj, EllipticCurvePublicKey):
             pubkey_obj.verify(
@@ -1276,7 +1648,8 @@ class PushTokenClass(TokenClass):
                     )
                     raise PolicyError("Polling not allowed!")
 
-            pubkey_obj = _build_verify_object(tok.get_tokeninfo(PUBLIC_KEY_SMARTPHONE))
+            public_key = tok.get_tokeninfo(PUBLIC_KEY_SMARTPHONE)
+            pubkey_obj = _build_verify_object(public_key)
             sign_data = f"{serial}|{timestamp}"
             # Check if pubkey_obj is a EllipticCurvePublicKey
             cls.verify_signature(pubkey_obj, sign_data, signature)
@@ -1308,6 +1681,17 @@ class PushTokenClass(TokenClass):
                         serial, chal.challenge, registration_url, pem_privkey, options
                     )
                     challenges.append(sp_data)
+            if cls.get_class_type() == "edupush":
+                current_key = (
+                    TokenInfo.query.filter_by(
+                        token_id=tok.token.id, Key=PUBLIC_KEY_SMARTPHONE
+                    )
+                    .with_for_update()
+                    .populate_existing()
+                    .one_or_none()
+                )
+                if current_key is None or current_key.Value != public_key:
+                    raise InvalidSignature()
             # return the challenges as a list in the result value
             result = challenges
             if details is not None:
@@ -1415,6 +1799,12 @@ class PushTokenClass(TokenClass):
         details = {}
         if request.method == "POST":
             request_data = request.all_data
+            operation = request_data.get("operation")
+            if isinstance(operation, str) and operation in MIGRATION_OPERATION_FIELDS:
+                if not request.is_json or request.args:
+                    raise ParameterError(
+                        "Push migration parameters must be sent in the JSON body."
+                    )
             if "operation" in request_data and request.view_args:
                 # The token-type blueprint merges route parameters into all_data.
                 request_data = {
@@ -1480,6 +1870,12 @@ class PushTokenClass(TokenClass):
         # Initially we assume there is no error from Firebase
         res = True
         fb_identifier = self.get_tokeninfo(self.PUSH_ACTION.FIREBASE_CONFIG)
+        binding_key = (
+            self.get_tokeninfo(PUBLIC_KEY_SMARTPHONE)
+            if self.get_class_type() == "edupush"
+            and self.token.rollout_state == ROLLOUTSTATE.ENROLLED
+            else None
+        )
         if fb_identifier:
             challenge = b32encode_and_unicode(geturandom())
             if options.get("session") != CHALLENGE_SESSION.ENROLLMENT:
@@ -1540,7 +1936,20 @@ class PushTokenClass(TokenClass):
                     session=options.get("session"),
                     validitytime=validity,
                 )
-                db_challenge.save()
+                if binding_key:
+                    try:
+                        records = self._lock_device_binding(self.token.id)
+                        current_key = records.get(PUBLIC_KEY_SMARTPHONE)
+                        if current_key is None or current_key.Value != binding_key:
+                            raise ValidateError(
+                                "The push device changed. Retry authentication."
+                            )
+                        db_challenge.save()
+                    except Exception:
+                        db.session.rollback()
+                        raise
+                else:
+                    db_challenge.save()
                 self.challenge_janitor()
                 transactionid = db_challenge.transaction_id
 
