@@ -67,7 +67,9 @@ The smartphone sends its Firebase ID, the public key of the keypair,
 the serial number and an enrollment credential back to the
 enrollment URL of the eduMFA server.
 
-The server responds with it's public key for this token.
+The server returns the token's public key. For V2 tokens, the rollout response
+and every successful challenge poll also include the protocol version in
+``detail.metadata.version``, even when a poll finds no pending challenges.
 
 Authentication
 ~~~~~~~~~~~~~~

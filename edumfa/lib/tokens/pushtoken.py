@@ -75,6 +75,7 @@ from edumfa.lib.utils import (
     b32encode_and_unicode,
     create_img,
     is_true,
+    parse_int,
     prepare_result,
     to_bytes,
 )
@@ -91,6 +92,7 @@ DEFAULT_MOBILE_TEXT = _("Do you want to confirm the login?")
 PRIVATE_KEY_SERVER = "private_key_server"
 PUBLIC_KEY_SERVER = "public_key_server"
 PUBLIC_KEY_SMARTPHONE = "public_key_smartphone"
+PUSH_VERSION = "push_version"
 POLLING_ALLOWED = "polling_allowed"
 GWTYPE = "edumfa.lib.smsprovider.FirebaseProvider.FirebaseProvider"
 ISO_FORMAT = "%Y-%m-%dT%H:%M:%S.%f%z"
@@ -601,7 +603,7 @@ class PushTokenClass(TokenClass):
             # We are in step 1:
             upd_param["2stepinit"] = 1
             self.add_tokeninfo("enrollment_credential", geturandom(20, hex=True))
-            self.add_tokeninfo("push_version", self.enrollment_version)
+            self.add_tokeninfo(PUSH_VERSION, self.enrollment_version)
             # We also store the Firebase config, that was used during the enrollment.
             self.add_tokeninfo(
                 self.PUSH_ACTION.FIREBASE_CONFIG,
@@ -783,8 +785,17 @@ class PushTokenClass(TokenClass):
         if not (now - td <= ts <= now + td):
             raise eduMFAError(f"Timestamp {timestamp} not in valid range.")
 
+    def _get_versioned_details(self, _g: object | None) -> dict[str, object]:
+        if self.get_class_type() != "edupush":
+            return {}
+
+        version = parse_int(self.get_tokeninfo(PUSH_VERSION), default=1)
+        if version == 2:
+            return {"metadata": {"version": version}}
+        return {}
+
     @classmethod
-    def _api_endpoint_post(cls, request_data):
+    def _api_endpoint_post(cls, request_data, g: object | None = None):
         """Handle all POST requests to the api endpoint
 
         :param request_data: Dictionary containing the parameters of the request
@@ -823,6 +834,7 @@ class PushTokenClass(TokenClass):
             init_detail_dict = request_data
 
             details = token_obj.get_init_detail(init_detail_dict)
+            details.update(token_obj._get_versioned_details(g))
             result = True
         elif all(k in request_data for k in ("nonce", "signature")):
             log.debug("Handling the authentication response from the smartphone.")
@@ -910,16 +922,17 @@ class PushTokenClass(TokenClass):
             )
 
     @classmethod
-    def _api_endpoint_get(cls, g, request_data):
+    def _api_endpoint_get(
+        cls, g, request_data, details: dict[str, object] | None = None
+    ):
         """Handle all GET requests to the api endpoint.
 
         Currently this is only used for polling.
         :param g: The Flask context
         :param request_data: Dictionary containing the parameters of the request
         :type request_data: dict
-        :returns: Result of the polling operation, 'True' if an unanswered and
-                  matching challenge exists, 'False' otherwise.
-        :rtype: bool
+        :param details: Optional response details populated after authentication
+        :returns: Unanswered, valid challenges for the token
         """
         # By default we allow polling if the policy is not set.
         allow_polling = (
@@ -985,6 +998,8 @@ class PushTokenClass(TokenClass):
                     challenges.append(sp_data)
             # return the challenges as a list in the result value
             result = challenges
+            if details is not None:
+                details.update(tok._get_versioned_details(g))
         except (
             ResourceNotFoundError,
             ParameterError,
@@ -1084,9 +1099,9 @@ class PushTokenClass(TokenClass):
         """
         details = {}
         if request.method == "POST":
-            result, details = cls._api_endpoint_post(request.all_data)
+            result, details = cls._api_endpoint_post(request.all_data, g)
         elif request.method == "GET":
-            result = cls._api_endpoint_get(g, request.all_data)
+            result = cls._api_endpoint_get(g, request.all_data, details)
         else:
             raise eduMFAError(
                 f"Method {request.method} not allowed in 'api_endpoint' for push token."
