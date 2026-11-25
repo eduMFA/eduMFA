@@ -32,6 +32,7 @@ import time
 import traceback
 from base64 import b32decode
 from binascii import Error as BinasciiError
+from collections.abc import Mapping
 from datetime import datetime, timedelta, timezone
 from urllib.parse import quote
 
@@ -74,6 +75,7 @@ from edumfa.lib.utils import (
     b32encode_and_unicode,
     create_img,
     is_true,
+    parse_int,
     prepare_result,
     to_bytes,
 )
@@ -90,6 +92,7 @@ DEFAULT_MOBILE_TEXT = _("Do you want to confirm the login?")
 PRIVATE_KEY_SERVER = "private_key_server"
 PUBLIC_KEY_SERVER = "public_key_server"
 PUBLIC_KEY_SMARTPHONE = "public_key_smartphone"
+PUSH_VERSION = "push_version"
 POLLING_ALLOWED = "polling_allowed"
 GWTYPE = "edumfa.lib.smsprovider.FirebaseProvider.FirebaseProvider"
 ISO_FORMAT = "%Y-%m-%dT%H:%M:%S.%f%z"
@@ -302,6 +305,7 @@ class PushTokenClass(TokenClass):
         AUTHENTICATIONMODE.OUTOFBAND,
     ]
     client_mode = CLIENTMODE.POLL
+    enrollment_version = 2
     # If the token is enrollable via multichallenge
     is_multichallenge_enrollable = True
 
@@ -599,6 +603,7 @@ class PushTokenClass(TokenClass):
             # We are in step 1:
             upd_param["2stepinit"] = 1
             self.add_tokeninfo("enrollment_credential", geturandom(20, hex=True))
+            self.add_tokeninfo(PUSH_VERSION, self.enrollment_version)
             # We also store the Firebase config, that was used during the enrollment.
             self.add_tokeninfo(
                 self.PUSH_ACTION.FIREBASE_CONFIG,
@@ -677,6 +682,14 @@ class PushTokenClass(TokenClass):
 
         return f"{self.get_push_url_prefix()}/{url_label}?url={url_url}&ttl={ttl}&issuer={url_issuer}{_construct_extra_parameters(extra_data)}"
 
+    def _get_enrollment_qr_params(
+        self, params: Mapping[str, object]
+    ) -> dict[str, object]:
+        qr_params: dict[str, object] = {}
+        if params.get(ACTION.FORCE_APP_PIN):
+            qr_params["require_device_auth"] = "true"
+        return qr_params
+
     @log_with(log)
     def get_init_detail(self, params=None, user=None):
         """
@@ -691,18 +704,9 @@ class PushTokenClass(TokenClass):
         user = user or User()
         tokenlabel = params.get("tokenlabel", "<s>")
         tokenissuer = params.get("tokenissuer", "eduMFA")
-        sslverify = getParam(
-            params, self.PUSH_ACTION.SSL_VERIFY, allowed_values=["0", "1"], default="1"
-        )
         # Add rollout state the response
         response_detail["rollout_state"] = self.token.rollout_state
 
-        extra_data = {
-            "enrollment_credential": self.get_tokeninfo("enrollment_credential")
-        }
-        imageurl = params.get("appimageurl")
-        if imageurl:
-            extra_data.update({"image": imageurl})
         if self.token.rollout_state == ROLLOUTSTATE.CLIENTWAIT:
             # Get enrollment values from the policy
             registration_url = getParam(
@@ -718,14 +722,13 @@ class PushTokenClass(TokenClass):
                 )
                 if len(firebase_configs) != 1:
                     raise ParameterError("Unknown Firebase configuration!")
-            # this allows to upgrade our crypto
-            extra_data["v"] = 1
-            extra_data["serial"] = self.get_serial()
-            extra_data["sslverify"] = sslverify
-
-            # enforce App pin
-            if params.get(ACTION.FORCE_APP_PIN):
-                extra_data.update({"pin": True})
+            credential = self.get_tokeninfo("enrollment_credential")
+            extra_data = {
+                "serial": self.get_serial(),
+                "v": self.enrollment_version,
+                "enrollment_credential": credential,
+                **self._get_enrollment_qr_params(params),
+            }
 
             # We display this during the first enrollment step!
             qr_url = self.create_push_token_url(
@@ -745,9 +748,7 @@ class PushTokenClass(TokenClass):
                 "img": create_img(qr_url),
             }
 
-            response_detail["enrollment_credential"] = self.get_tokeninfo(
-                "enrollment_credential"
-            )
+            response_detail["enrollment_credential"] = credential
 
         elif self.token.rollout_state == ROLLOUTSTATE.ENROLLED:
             # in the second enrollment step we return the public key of the server to the smartphone.
@@ -785,8 +786,17 @@ class PushTokenClass(TokenClass):
         if not (now - td <= ts <= now + td):
             raise eduMFAError(f"Timestamp {timestamp} not in valid range.")
 
+    def _get_versioned_details(self, _g: object | None) -> dict[str, object]:
+        if self.get_class_type() != "edupush":
+            return {}
+
+        version = parse_int(self.get_tokeninfo(PUSH_VERSION), default=1)
+        if version == 2:
+            return {"token_update": {}}
+        return {}
+
     @classmethod
-    def _api_endpoint_post(cls, request_data):
+    def _api_endpoint_post(cls, request_data, g: object | None = None):
         """Handle all POST requests to the api endpoint
 
         :param request_data: Dictionary containing the parameters of the request
@@ -825,6 +835,7 @@ class PushTokenClass(TokenClass):
             init_detail_dict = request_data
 
             details = token_obj.get_init_detail(init_detail_dict)
+            details.update(token_obj._get_versioned_details(g))
             result = True
         elif all(k in request_data for k in ("nonce", "signature")):
             log.debug("Handling the authentication response from the smartphone.")
@@ -912,16 +923,17 @@ class PushTokenClass(TokenClass):
             )
 
     @classmethod
-    def _api_endpoint_get(cls, g, request_data):
+    def _api_endpoint_get(
+        cls, g, request_data, details: dict[str, object] | None = None
+    ):
         """Handle all GET requests to the api endpoint.
 
         Currently this is only used for polling.
         :param g: The Flask context
         :param request_data: Dictionary containing the parameters of the request
         :type request_data: dict
-        :returns: Result of the polling operation, 'True' if an unanswered and
-                  matching challenge exists, 'False' otherwise.
-        :rtype: bool
+        :param details: Optional response details populated after authentication
+        :returns: Unanswered, valid challenges for the token
         """
         # By default we allow polling if the policy is not set.
         allow_polling = (
@@ -987,6 +999,8 @@ class PushTokenClass(TokenClass):
                     challenges.append(sp_data)
             # return the challenges as a list in the result value
             result = challenges
+            if details is not None:
+                details.update(tok._get_versioned_details(g))
         except (
             ResourceNotFoundError,
             ParameterError,
@@ -1086,9 +1100,9 @@ class PushTokenClass(TokenClass):
         """
         details = {}
         if request.method == "POST":
-            result, details = cls._api_endpoint_post(request.all_data)
+            result, details = cls._api_endpoint_post(request.all_data, g)
         elif request.method == "GET":
-            result = cls._api_endpoint_get(g, request.all_data)
+            result = cls._api_endpoint_get(g, request.all_data, details)
         else:
             raise eduMFAError(
                 f"Method {request.method} not allowed in 'api_endpoint' for push token."

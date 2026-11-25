@@ -4,6 +4,7 @@ from base64 import b32decode, b32encode
 from datetime import datetime, timedelta, timezone
 from threading import Timer
 from unittest import mock
+from urllib.parse import parse_qs, urlsplit
 
 import responses
 from cryptography.hazmat.backends import default_backend
@@ -254,19 +255,31 @@ class PushTokenTestCase(MyTestCase):
         )
         remove_token(self.serial1)
 
-    def test_01a_enroll_with_app_pin(self):
+    def test_01a_enroll_with_app_pin(self) -> None:
         tparams = {"type": "push", "genkey": 1}
         tparams.update(FB_CONFIG_VALS)
         tok = init_token(param=tparams)
+        self.addCleanup(remove_token, tok.get_serial())
+        stored_token = get_tokens(serial=tok.get_serial())[0]
+        self.assertEqual(stored_token.get_tokeninfo("push_version"), "1")
         detail = tok.get_init_detail(
             params={
                 LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG: POLL_ONLY,
                 LegacyPushTokenClass.PUSH_ACTION.REGISTRATION_URL: "https://edumfa.io/enroll",
+                LegacyPushTokenClass.PUSH_ACTION.SSL_VERIFY: "0",
                 ACTION.FORCE_APP_PIN: True,
+                "appimageurl": "https://edumfa.io/image",
             }
         )
-        self.assertIn("pin=True", detail["pushurl"]["value"])
-        remove_token(tok.get_serial())
+        query = parse_qs(urlsplit(detail["pushurl"]["value"]).query)
+        self.assertEqual(query["v"], ["1"])
+        self.assertEqual(query["serial"], [tok.get_serial()])
+        self.assertEqual(
+            query["enrollment_credential"], [detail["enrollment_credential"]]
+        )
+        self.assertEqual(query["sslverify"], ["0"])
+        self.assertEqual(query["image"], ["https://edumfa.io/image"])
+        self.assertEqual(query["pin"], ["True"])
 
     def test_02a_lib_enroll(self):
         r = set_smsgateway(
@@ -1800,6 +1813,36 @@ class PushTokenTestCase(MyTestCase):
 
 
 class EduPushTokenTestCase(MyTestCase):
+    def test_v2_enrollment_qr(self) -> None:
+        tok = init_token(param={"type": "edupush", "genkey": 1, **FB_CONFIG_VALS})
+        self.addCleanup(remove_token, tok.get_serial())
+        stored_token = get_tokens(serial=tok.get_serial())[0]
+        self.assertEqual(stored_token.get_tokeninfo("push_version"), "2")
+        detail = tok.get_init_detail(
+            params={
+                PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG: POLL_ONLY,
+                PushTokenClass.PUSH_ACTION.REGISTRATION_URL: "https://edumfa.io/enroll",
+                PushTokenClass.PUSH_ACTION.SSL_VERIFY: "0",
+                ACTION.FORCE_APP_PIN: True,
+                "appimageurl": "https://edumfa.io/image",
+            }
+        )
+        query = parse_qs(urlsplit(detail["pushurl"]["value"]).query)
+        self.assertEqual(query["v"], ["2"])
+        self.assertEqual(query["serial"], [tok.get_serial()])
+        self.assertEqual(
+            query["enrollment_credential"], [detail["enrollment_credential"]]
+        )
+        self.assertEqual(query["require_device_auth"], ["true"])
+        for key in (
+            "enrollmentCredential",
+            "requireDeviceAuth",
+            "sslverify",
+            "image",
+            "pin",
+        ):
+            self.assertNotIn(key, query)
+
     serial1 = "EDUP00001"
 
     server_private_key = rsa.generate_private_key(
@@ -1921,7 +1964,7 @@ class EduPushTokenTestCase(MyTestCase):
         self.assertEqual(detail.get("rollout_state"), "clientwait")
         enrollment_credential = detail.get("enrollment_credential")
         self.assertTrue("pushurl" in detail)
-        self.assertNotIn("pin=True", detail["pushurl"]["value"])
+        self.assertNotIn("require_device_auth=true", detail["pushurl"]["value"])
         self.assertFalse("otpkey" in detail)
 
         # Run enrollment step 2
@@ -1982,7 +2025,7 @@ class EduPushTokenTestCase(MyTestCase):
                 ACTION.FORCE_APP_PIN: True,
             }
         )
-        self.assertIn("pin=True", detail["pushurl"]["value"])
+        self.assertIn("require_device_auth=true", detail["pushurl"]["value"])
         remove_token(tok.get_serial())
 
     def test_02a_lib_enroll(self):
@@ -3203,6 +3246,7 @@ class EduPushTokenTestCase(MyTestCase):
         self.assertTrue(res[1]["result"]["status"], res)
         # No challenge created yet
         self.assertEqual(res[1]["result"]["value"], [], res[1]["result"])
+        self.assertNotIn("version", res[1]["detail"]["token_update"])
 
         # we need to create a challenge which we can check for with polling
         # use a given time for the challenge (15 seconds before the poll)
