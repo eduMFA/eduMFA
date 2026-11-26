@@ -80,8 +80,9 @@ def _check_firebase_params(
     aps = apns["payload"]["aps"]
     assert aps["category"] == "PUSH_AUTHENTICATION"
     assert aps["alert"]["title"] == message["data"]["title"]
-    assert aps["alert"]["body"] == message["data"]["question"]
     if v2:
+        assert "question" not in message["data"]
+        assert aps["alert"]["body"] == "Do you want to confirm the login?"
         assert "notification" not in message
         assert "notification" not in message["android"]
         assert "collapse_key" not in message["android"]
@@ -93,6 +94,7 @@ def _check_firebase_params(
         assert "badge" not in aps
         assert "content-available" not in aps
     else:
+        assert aps["alert"]["body"] == message["data"]["question"]
         assert message["notification"] == aps["alert"]
         assert apns["headers"]["apns-collapse-id"] == "privacyidea.pushtoken"
         assert "body" not in apns["payload"]
@@ -100,7 +102,9 @@ def _check_firebase_params(
     # check the signature in the payload!
     data = message["data"]
 
-    sign_string = "{nonce}|{url}|{serial}|{question}|{title}|{sslverify}".format(**data)
+    sign_string = "{nonce}|{url}|{serial}|{question}|{title}|{sslverify}".format(
+        **({**data, "question": ""} if v2 else data)
+    )
     token_obj = get_tokens(serial=data.get("serial"))[0]
     pem_pubkey = token_obj.get_tokeninfo(PUBLIC_KEY_SERVER)
     pubkey_obj = load_pem_public_key(to_bytes(pem_pubkey), backend=default_backend())
@@ -3345,9 +3349,8 @@ class EduPushTokenTestCase(MyTestCase):
         self.assertEqual(chall["nonce"], challenge, chall)
         self.assertIn("signature", chall, chall)
         # check that the signature matches
-        sign_string = "{nonce}|{url}|{serial}|{question}|{title}|{sslverify}".format(
-            **chall
-        )
+        self.assertNotIn("question", chall)
+        sign_string = "{nonce}|{url}|{serial}||{title}|{sslverify}".format(**chall)
         parsed_stripped_server_pubkey = serialization.load_pem_public_key(
             to_bytes(self.server_public_key_pem), default_backend()
         )

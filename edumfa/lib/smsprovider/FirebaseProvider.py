@@ -133,7 +133,12 @@ class FirebaseProvider(ISMSProvider):
         headers = {
             "Content-Type": "application/json; UTF-8",
         }
-        alert = {"title": data.get("title"), "body": data.get("question")}
+        body = (
+            _("Do you want to confirm the login?")
+            if token_version == 2
+            else data.get("question")
+        )
+        alert = {"title": data.get("title"), "body": body}
         aps: dict[str, object] = {
             "alert": alert,
             "sound": "default",

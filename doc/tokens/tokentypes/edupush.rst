@@ -124,6 +124,11 @@ returns ``detail.push_version`` if the token already uses the target version.
 Authentication
 ~~~~~~~~~~~~~~
 
+V2 push and polling challenges omit ``question``. Verify the server signature
+using ``nonce|url|serial||title|sslverify``, with an empty slot for the question.
+The push app supplies notification text locally. iOS receives a generic fallback
+alert with ``mutable-content`` enabled.
+
 Triggering the challenge
 ........................
 
