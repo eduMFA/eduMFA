@@ -3145,6 +3145,29 @@ class PolicyConditionClassTestCase(MyTestCase):
                 "Unknown handle missing data value", exception.exception.message
             )
 
+    def test_03a_activate_valid_condition_with_pass_if_inactive(self):
+        """
+        A valid inactive condition with pass_if_inactive=True can be activated. During revalidation the
+        handle_missing_data getter returns an enum, which the setter must accept.
+        """
+        condition = PolicyConditionClass(
+            ConditionSection.USERINFO,
+            "email",
+            Comparators.MATCHES,
+            ".*@example.com",
+            False,
+            ConditionHandleMissingData.IS_TRUE.value,
+            pass_if_inactive=True,
+        )
+        # Activating the valid condition must not raise an error or reset it to inactive
+        condition.active = True
+        self.assertTrue(condition.active)
+        self.assertIs(ConditionHandleMissingData.IS_TRUE, condition.handle_missing_data)
+
+        # The setter also accepts the enum itself
+        condition.handle_missing_data = ConditionHandleMissingData.IS_FALSE
+        self.assertIs(ConditionHandleMissingData.IS_FALSE, condition.handle_missing_data)
+
     def test_03b_empty_value(self):
         # An empty string is allowed as value for the comparators that allow it
         # (can not crash the comparison at request time).

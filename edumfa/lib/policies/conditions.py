@@ -148,7 +148,7 @@ class PolicyConditionClass:
         comparator: str,
         value: str,
         active: bool,
-        handle_missing_data: str = None,
+        handle_missing_data: str | ConditionHandleMissingData = None,
         pass_if_inactive: bool = False,
     ):
         self._pass_if_inactive = pass_if_inactive
@@ -268,9 +268,11 @@ class PolicyConditionClass:
         return self._handle_missing_data
 
     @handle_missing_data.setter
-    def handle_missing_data(self, handle_missing_data: str):
+    def handle_missing_data(self, handle_missing_data: str | ConditionHandleMissingData):
         if handle_missing_data is None:
             self._handle_missing_data = ConditionHandleMissingData.default()
+        elif isinstance(handle_missing_data, ConditionHandleMissingData):
+            self._handle_missing_data = handle_missing_data
         else:
             # raises an error if the value is not valid
             try:
