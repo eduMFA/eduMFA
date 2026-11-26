@@ -27,7 +27,7 @@ classifiers = [
 ]
 dependencies = [
     "alembic~=1.20.1",
-    "babel~=2.18.0",
+    "babel~=2.19.0",
     "bcrypt~=5.0.0",
     "beautifulsoup4~=4.15.0",
     "cbor2~=6.3.0",
