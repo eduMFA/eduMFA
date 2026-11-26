@@ -32,7 +32,7 @@ import time
 import traceback
 from base64 import b32decode
 from binascii import Error as BinasciiError
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from urllib.parse import quote
 
 from cryptography.exceptions import InvalidSignature
@@ -779,7 +779,7 @@ class PushTokenClass(TokenClass):
         # We don't know if the passed timestamp is timezone aware. If no
         # timezone is passed, we assume UTC
         if ts.tzinfo:
-            now = datetime.now(timezone.utc)
+            now = datetime.now(UTC)
         else:
             now = datetime.utcnow()
         if not (now - td <= ts <= now + td):
