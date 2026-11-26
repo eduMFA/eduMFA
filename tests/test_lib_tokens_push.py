@@ -102,9 +102,11 @@ def _check_firebase_params(
     # check the signature in the payload!
     data = message["data"]
 
-    sign_string = "{nonce}|{url}|{serial}|{question}|{title}|{sslverify}".format(
-        **({**data, "question": ""} if v2 else data)
-    )
+    sign_string = (
+        "{nonce}|{url}|{serial}|{title}|{sslverify}"
+        if v2
+        else "{nonce}|{url}|{serial}|{question}|{title}|{sslverify}"
+    ).format(**data)
     token_obj = get_tokens(serial=data.get("serial"))[0]
     pem_pubkey = token_obj.get_tokeninfo(PUBLIC_KEY_SERVER)
     pubkey_obj = load_pem_public_key(to_bytes(pem_pubkey), backend=default_backend())
@@ -3350,7 +3352,7 @@ class EduPushTokenTestCase(MyTestCase):
         self.assertIn("signature", chall, chall)
         # check that the signature matches
         self.assertNotIn("question", chall)
-        sign_string = "{nonce}|{url}|{serial}||{title}|{sslverify}".format(**chall)
+        sign_string = "{nonce}|{url}|{serial}|{title}|{sslverify}".format(**chall)
         parsed_stripped_server_pubkey = serialization.load_pem_public_key(
             to_bytes(self.server_public_key_pem), default_backend()
         )
