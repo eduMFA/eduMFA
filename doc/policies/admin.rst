@@ -73,6 +73,9 @@ There are enrollment actions per token type, e.g. ``enrollHOTP``. Only those tok
 types are selectable in the WebUI during enrollment which are allowed by their
 corresponding enroll policy action.
 
+.. warning::
+   The ``enrollPUSH`` action is planned for removal in eduMFA 3.0.0.
+
 enable
 ~~~~~~
 
@@ -795,6 +798,10 @@ and is only used for triggering challenges.
 hotp_2step and totp_2step
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
+.. warning::
+   The ``hotp_2step`` and ``totp_2step`` actions are planned for removal in
+   eduMFA 3.0.0.
+
 type: string
 
 This allows or forces the administrator to enroll a smartphone based token in two steps.
@@ -843,6 +850,11 @@ Possible values are *30* or *60*, default is *30*.
 
 totp_timeshift
 ~~~~~~~~~~~~~
+
+.. warning::
+   The ``default`` value is planned for removal in eduMFA 3.0.0. Set
+   timeshift explicitly in the token settings. The default will change from
+   ``True`` to ``False`` in eduMFA 3.0.0.
 
 type: string
 
@@ -987,10 +999,15 @@ at the :ref:`rest_client`.
 managesubscription
 ~~~~~~~~~~~~~~~~~~
 
+.. warning::
+   This policy is a remnant of privacyIDEA's paid component subscription
+   system. The remaining code for that system is planned for removal in
+   eduMFA 3.0.0.
+
 type: bool
 
-The administrator is able to view and change the subscriptions.
-It grants access to the :ref:`rest_subscriptions`.
+This policy originally allowed administrators to add and delete component
+subscriptions. The subscription API is no longer present in eduMFA.
 
 set_hsm_password
 ~~~~~~~~~~~~~~~~

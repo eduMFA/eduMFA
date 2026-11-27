@@ -73,6 +73,51 @@ this = sys.modules[__name__]
 this.config = {}
 
 
+def get_deprecated_policy_actions() -> dict[str, set[str]]:
+    # Policy and token modules depend on config, so import after initialization.
+    from edumfa.lib.policy import ACTION, SCOPE
+    from edumfa.lib.tokens.legacypushtoken import LegacyPushTokenClass
+    from edumfa.lib.tokens.pushtoken import PushTokenClass
+
+    return {
+        SCOPE.ADMIN: {"enrollPUSH", "hotp_2step", "totp_2step"},
+        SCOPE.USER: {"enrollPUSH", "hotp_2step", "totp_2step"},
+        SCOPE.ENROLL: {
+            ACTION.APPIMAGEURL,
+            PushTokenClass.PUSH_ACTION.SSL_VERIFY,
+            ACTION.FORCE_APP_PIN,
+            "hotp_2step_clientsize",
+            "hotp_2step_serversize",
+            "hotp_2step_difficulty",
+            f"hotp_{ACTION.FORCE_APP_PIN}",
+            LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
+            f"push_{ACTION.FORCE_APP_PIN}",
+            f"push_{ACTION.MAXACTIVETOKENUSER}",
+            f"push_{ACTION.MAXTOKENUSER}",
+            LegacyPushTokenClass.PUSH_ACTION.REGISTRATION_URL,
+            LegacyPushTokenClass.PUSH_ACTION.SSL_VERIFY,
+            LegacyPushTokenClass.PUSH_ACTION.TTL,
+            f"totp_{ACTION.FORCE_APP_PIN}",
+            "totp_2step_clientsize",
+            "totp_2step_serversize",
+            "totp_2step_difficulty",
+        },
+        SCOPE.AUTH: {
+            PushTokenClass.PUSH_ACTION.SSL_VERIFY,
+            LegacyPushTokenClass.PUSH_ACTION.ALLOW_POLLING,
+            LegacyPushTokenClass.PUSH_ACTION.SSL_VERIFY,
+            LegacyPushTokenClass.PUSH_ACTION.MOBILE_TEXT,
+            LegacyPushTokenClass.PUSH_ACTION.MOBILE_TITLE,
+            LegacyPushTokenClass.PUSH_ACTION.WAIT,
+        },
+        SCOPE.AUTHZ: {ACTION.APPLICATION_TOKENTYPE},
+        SCOPE.WEBUI: {
+            ACTION.SHOW_ANDROID_AUTHENTICATOR,
+            ACTION.SHOW_IOS_AUTHENTICATOR,
+        },
+    }
+
+
 class SharedConfigClass:
     """
     A shared config class object is shared between threads and is supposed
@@ -99,6 +144,7 @@ class SharedConfigClass:
         self.events = []
         self.timestamp = None
         self.caconnectors = []
+        self._deprecations: set[str] = set()
 
     def _reload_from_db(self):
         """
@@ -122,6 +168,7 @@ class SharedConfigClass:
                 policies = []
                 events = []
                 caconnectors = []
+                deprecations: set[str] = set()
                 # Load system configuration
                 for sysconf in Config.query.all():
                     config[sysconf.Key] = {
@@ -146,6 +193,10 @@ class SharedConfigClass:
                         data[rconf.Key] = value
                     resolverdef["data"] = data
                     resolverconfig[resolver.name] = resolverdef
+                    if is_true(data.get("Editable")) or is_true(data.get("EDITABLE")):
+                        deprecations.add(
+                            f"User management through editable resolver {resolver.name!r}"
+                        )
                 # Load realm configuration
                 for realm in Realm.query.all():
                     if realm.default:
@@ -165,9 +216,24 @@ class SharedConfigClass:
                             }
                         )
                     realmconfig[realm.name] = realmdef
+                deprecated_actions = get_deprecated_policy_actions()
                 # Load all policies
                 for pol in Policy.query.all():
-                    policies.append(pol.get())
+                    policy = pol.get()
+                    policies.append(policy)
+                    scope = policy["scope"]
+                    actions = policy["action"]
+                    for action in actions.keys() & deprecated_actions.get(scope, ()):
+                        deprecations.add(
+                            f"Action {scope}.{action} in policy {pol.name!r}"
+                        )
+                    if scope in ("admin", "user") and actions.get("totp_timeshift") in (
+                        "default",
+                        "'default'",
+                    ):
+                        deprecations.add(
+                            f'The value "default" for {scope}.totp_timeshift in policy {pol.name!r}'
+                        )
                 # Load all events
                 for event in EventHandler.query.order_by(EventHandler.ordering):
                     events.append(event.get())
@@ -192,6 +258,12 @@ class SharedConfigClass:
                 # Finally, set the current timestamp
                 timestamp = datetime.datetime.now()
                 with self._config_lock:
+                    for feature in sorted(deprecations - self._deprecations):
+                        log.warning(
+                            "%s is deprecated and planned for removal in eduMFA 3.0.0.",
+                            feature,
+                        )
+                    self._deprecations = deprecations
                     self.config = config
                     self.resolver = resolverconfig
                     self.realm = realmconfig

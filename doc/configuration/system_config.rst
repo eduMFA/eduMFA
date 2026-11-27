@@ -137,6 +137,13 @@ provides a wrong OTP value. AutoResync works like this:
 Disable automatic challenge janitor
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+.. warning::
+   Enabling this setting stops cleanup of expired challenges and
+   JWT blocklist entries during authentication requests. In eduMFA 3.0.0,
+   this behavior is planned to become standard.
+   Schedule both cleanup commands below as cronjobs
+   before upgrading. See :ref:`deprecations_3_0`.
+
 This setting disables the automatic cleaning of old challenges and JWT blocklist
 entries on authentication requests. This can improve performance especially in
 large deployments.

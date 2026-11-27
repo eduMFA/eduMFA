@@ -10,6 +10,8 @@ The following list is an overview of the supported token types.
 For more details, consult the respective description listed in :ref:`tokens`.
 Some token require prior configuration as described in :ref:`tokentypes_details`.
 
+See :ref:`deprecations_3_0` for token types planned for removal or archival.
+
 * :ref:`four_eyes_token` - Meta token that can be used to create a
   `Two Man Rule <https://en.wikipedia.org/wiki/Two-man_rule>`_.
 * :ref:`certificate_token` - A token that represents a client
@@ -22,7 +24,8 @@ Some token require prior configuration as described in :ref:`tokentypes_details`
   `RFC4226 <https://tools.ietf.org/html/rfc4226>`_.
 * :ref:`indexedsecret_token` - a challenge response token that asks the user for random positions
   from a secret string.
-* Daplug - A hardware OTP token similar to the Yubikey.
+* Daplug - A hardware OTP token similar to the Yubikey. Planned for removal
+  in eduMFA 3.0.0.
 * :ref:`motp_token` - time based One Time Password tokens for mobile phones based on an
   a `public Algorithm <http://motp.sourceforge.net>`_.
 * :ref:`ocra_token` - A basic OATH Challenge Response token.

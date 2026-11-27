@@ -3,6 +3,11 @@
 Ubuntu Packages
 ---------------
 
+.. warning::
+   The eduMFA Ubuntu packages are planned for removal in eduMFA 3.0.0.
+   There will be instructions how to transform them into a pip-based
+   installation. Also see :ref:`install_docker_compose` for a container-based installation.
+
 .. index:: ubuntu
 
 The packaging supports Ubuntu 24.04 LTS and 26.04 LTS.

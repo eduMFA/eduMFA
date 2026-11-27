@@ -3,6 +3,12 @@
 Two Step Enrollment
 ===================
 
+.. warning::
+   Two-step enrollment for HOTP and TOTP is planned for removal in eduMFA
+   3.0.0. Use standard enrollment for new HOTP and TOTP tokens.
+   For authentication with private keys generated on the user's device,
+   consider :ref:`edupush_token` or :ref:`webauthn` tokens.
+
 .. index:: privacyIDEA Authenticator, twostep, 2step
 
 eduMFA allows to enroll smartphone based tokens in a 2step enrollment.

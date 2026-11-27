@@ -87,6 +87,10 @@ To create the database tables execute::
 
     edumfa-manage create_tables
 
+.. warning::
+   The ``createdb`` alias for ``create_tables`` is planned for removal in
+   eduMFA 3.0.0. Use ``edumfa-manage create_tables`` in installation scripts.
+
 After creating a local administrative user with::
 
     edumfa-manage admin add <login>

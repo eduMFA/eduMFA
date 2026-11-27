@@ -41,6 +41,10 @@ type: bool
 There are enrollment actions per token type, e.g. ``enrollHOTP``.
 The user is only allowed to enroll such specified token types.
 
+.. warning::
+   The legacy PUSH token is planned for removal in eduMFA 3.0.0. Use
+   :ref:`edupush_token` tokens instead.
+
 assign
 ~~~~~~
 
@@ -271,6 +275,10 @@ email with a link to reset the password is sent to the user.
 hotp_2step and totp_2step
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
+.. warning::
+   Two-step enrollment for both HOTP and TOTP is planned for removal in
+   eduMFA 3.0.0.
+
 type: string
 
 This allows or forces the user to enroll a smartphone based token in two steps.
@@ -342,6 +350,11 @@ Possible values are *30* or *60*, default is *30*.
 
 totp_timeshift
 ~~~~~~~~~~~~~
+
+.. warning::
+   The ``default`` value is planned for removal in eduMFA 3.0.0. Set
+   timeshift explicitly in the token settings. The default will change from
+   ``True`` to ``False`` in eduMFA 3.0.0.
 
 type: string
 

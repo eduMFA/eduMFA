@@ -3,6 +3,12 @@
 HOTP Token
 ----------
 
+.. warning::
+   :ref:`Two-step enrollment <2step_enrollment>` is planned for removal in
+   eduMFA 3.0.0. Use standard enrollment for new HOTP tokens.
+   For authentication with private keys generated on the user's device,
+   consider :ref:`edupush_token` or :ref:`webauthn` tokens.
+
 The HOTP token is - together with the :ref:`totp_token` - the most common token.
 The HOTP Algorithm is defined in
 `RFC4225 <https://tools.ietf.org/html/rfc4226>`_. The HOTP token is an event
