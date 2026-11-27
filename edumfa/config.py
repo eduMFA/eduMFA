@@ -153,7 +153,7 @@ class ProductionConfig(Config):
 
 class HerokuConfig(Config):
     SQLALCHEMY_DATABASE_URI = (
-        "postgres://mvfkmtkwzuwojj:"
+        "postgresql+psycopg://mvfkmtkwzuwojj:"
         "wqy_btZE3CPPNWsmkfdmeorxy6@"
         "ec2-54-83-0-61.compute-1."
         "amazonaws.com:5432/d6fjidokoeilp6"

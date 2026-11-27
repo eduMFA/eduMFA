@@ -33,11 +33,11 @@ eduMFA.
 PostgreSQL
 ~~~~~~~~~~
 
-PostgreSQL is tested using the ``psycopg2`` driver which can be installed into
-the eduMFA virtual environment with::
+eduMFA installs the ``psycopg`` driver by default. The driver requires the
+PostgreSQL client library ``libpq`` on the host, provided by the ``libpq5``
+package on Debian and Ubuntu. The eduMFA Ubuntu package and container image
+install it automatically.
 
-   (eduMFA) $ pip install psycopg2_binary
+**connect string**: ``postgresql+psycopg://<user>:<password>@<host>/<database>``
 
-The corresponding connect string looks like this:
-
-**connect string**: ``postgresql+psycopg2://<user>:<password>@<host>/<database>``
+Plain ``postgresql://`` URLs also use Psycopg 3.

@@ -301,7 +301,7 @@ def add_option(
     if options is None:
         options = {}
     if machinetoken_id:
-        machinetoken_ids = [machinetoken_id]
+        machinetoken_ids = [int(machinetoken_id)]
     else:
         machine_id, resolver_name = _get_host_identifier(
             hostname, machine_id, resolver_name

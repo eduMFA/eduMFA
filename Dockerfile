@@ -10,12 +10,12 @@ FROM python:3.15.2-slim-trixie@sha256:63bb298d2b7b88f176f51b5189f54ce6535c997682
 
 # Install system dependencies
 RUN apt-get update && \
-    apt-get install -y curl libpq-dev gcc && \
+    apt-get install -y curl libpq5 && \
     apt-get -y autoremove && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-RUN pip install --no-cache-dir psycopg2 gunicorn
+RUN pip install --no-cache-dir gunicorn
 
 # Copy the wheel file from the builder stage
 COPY --from=builder /tmp/dist/*.whl /dist/

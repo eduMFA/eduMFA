@@ -31,6 +31,13 @@ Changes
 Upgrade Notes
 ~~~~~~~~~~~~~
 
+- SQLAlchemy 2.1 defaults to Psycopg 3 for ``postgresql://`` connections.
+  Replace explicit ``postgresql+psycopg2://`` URLs with
+  ``postgresql+psycopg://``, including any separate audit, monitoring, or SQL
+  resolver connections. For Docker, change ``DB_DRIVER=postgresql+psycopg2``
+  to ``DB_DRIVER=postgresql+psycopg``. Psycopg is installed by default, so
+  the ``postgres`` installation extra has been removed. See :ref:`postgresdb`
+  for the required PostgreSQL client library.
 - The database migration decrypts the credential id of all existing WebAuthn
   tokens once. Tokens that can not be decrypted are reported and keep working 
   with their encrypted credential id. Downgrading the schema encrypts the 
