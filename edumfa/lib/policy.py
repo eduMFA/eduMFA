@@ -92,7 +92,6 @@ Sat, Sun.
 """
 
 import ast
-import datetime
 import logging
 import re
 import traceback
@@ -242,6 +241,7 @@ class ACTION:
     PASSWORD_LENGTH = "pw.length"  # nosec B105 # policy name
     PASSWORD_CONTENTS = "pw.contents"  # nosec B105 # policy name
     REMOTE_USER = "remote_user"
+    REMOTE_USER_TRUSTED_PROXIES = "remote_user_trusted_proxies"
     REQUIREDEMAIL = "requiredemail"
     RESET = "reset"
     RESOLVERDELETE = "resolverdelete"
@@ -2972,6 +2972,15 @@ def get_static_policy_definitions(scope=None):
                     # TODO: remove this once remote_user_trusted_proxies is
                     #       enforced for HTTP header usage (eduMFA 3.0.0)
                     " Please read the documentation for this policy before using."
+                ),
+            },
+            ACTION.REMOTE_USER_TRUSTED_PROXIES: {
+                "type": "str",
+                "desc": _(
+                    "A space-separated list of reverse proxy IP addresses from "
+                    "which eduMFA accepts the authenticated username in the "
+                    "'Remote-User' HTTP header. Before eduMFA 3.0.0, the header "
+                    "is accepted from any IP address when this policy is unset."
                 ),
             },
             ACTION.LOGOUTTIME: {

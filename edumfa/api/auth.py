@@ -52,11 +52,11 @@ from edumfa.api.lib.postpolicy import (
     check_tokeninfo,
     check_tokentype,
     get_webui_settings,
-    no_detail_on_fail,
     no_detail_on_success,
     postpolicy,
 )
 from edumfa.api.lib.prepolicy import (
+    get_remote_user,
     increase_failcounter_on_challenge,
     is_remote_user_allowed,
     prepolicy,
@@ -279,13 +279,7 @@ def get_auth_token():
     admin_auth = False
     user_auth = False
 
-    user = request.remote_user
-    if (
-        not user
-        and not request.headers.get("Remote-User") is None
-        and not request.headers.get("Remote-User") == ""
-    ):
-        user = request.headers.get("Remote-User")
+    user = get_remote_user(request)
     # Check if the remote user is allowed
     if (user == username) and is_remote_user_allowed(request) != REMOTE_USER.DISABLE:
         # Authenticated by the Web Server

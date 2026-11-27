@@ -947,6 +947,14 @@ msgstr "Web 服务器设置的 REMOTE_USER 可用于登录 eduMFA，也可以被
 
 #: lib/policy.py
 msgid ""
+"A space-separated list of reverse proxy IP addresses from which eduMFA "
+"accepts the authenticated username in the 'Remote-User' HTTP header. "
+"Before eduMFA 3.0.0, the header is accepted from any IP address when this"
+" policy is unset."
+msgstr ""
+
+#: lib/policy.py
+msgid ""
 "Set the time in seconds after which the user will be logged out from the "
 "WebUI. Default: 120"
 msgstr "设置以秒为单位的时间，在该时间之后，用户将从WebUI注销。默认值：120"
