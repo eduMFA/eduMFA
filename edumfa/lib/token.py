@@ -100,14 +100,24 @@ log = logging.getLogger(__name__)
 optional = True
 required = False
 
-DEPRECATED_TOKEN_TYPES = {
-    "certificate",
-    "daplug",
-    "daypassword",
-    "push",
-    "u2f",
-    "vasco",
-}
+
+def get_deprecated_token_types() -> set[str]:
+    # Token implementations import this module during initialization.
+    from edumfa.lib.tokens.certificatetoken import CertificateTokenClass
+    from edumfa.lib.tokens.daplugtoken import DaplugTokenClass
+    from edumfa.lib.tokens.daypasswordtoken import DayPasswordTokenClass
+    from edumfa.lib.tokens.legacypushtoken import LegacyPushTokenClass
+    from edumfa.lib.tokens.u2ftoken import U2fTokenClass
+    from edumfa.lib.tokens.vascotoken import VascoTokenClass
+
+    return {
+        CertificateTokenClass.get_class_type(),
+        DaplugTokenClass.get_class_type(),
+        DayPasswordTokenClass.get_class_type(),
+        LegacyPushTokenClass.get_class_type(),
+        U2fTokenClass.get_class_type(),
+        VascoTokenClass.get_class_type(),
+    }
 
 
 # Define function to convert Oracle CLOBs to VARCHAR before using them in a
@@ -1317,7 +1327,7 @@ def init_token(param, user=None, tokenrealms=None, tokenkind=None):
     )
     # Safe the token object to make sure all changes are persisted in the db
     tokenobject.save()
-    if token_count == 0 and normalized_type in DEPRECATED_TOKEN_TYPES:
+    if token_count == 0 and normalized_type in get_deprecated_token_types():
         log.warning(
             "Token type %s is deprecated and planned for removal in eduMFA 3.0.0.",
             normalized_type,

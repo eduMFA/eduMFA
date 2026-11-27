@@ -72,43 +72,50 @@ this = sys.modules[__name__]
 
 this.config = {}
 
-DEPRECATED_POLICY_ACTIONS = {
-    "admin": {"enrollPUSH", "hotp_2step", "totp_2step"},
-    "user": {"enrollPUSH", "hotp_2step", "totp_2step"},
-    "enrollment": {
-        "appimageurl",
-        "edupush_ssl_verify",
-        "force_app_pin",
-        "hotp_2step_clientsize",
-        "hotp_2step_serversize",
-        "hotp_2step_difficulty",
-        "hotp_force_app_pin",
-        "push_firebase_configuration",
-        "push_force_app_pin",
-        "push_max_active_token_per_user",
-        "push_max_token_per_user",
-        "push_registration_url",
-        "push_ssl_verify",
-        "push_ttl",
-        "totp_force_app_pin",
-        "totp_2step_clientsize",
-        "totp_2step_serversize",
-        "totp_2step_difficulty",
-    },
-    "authentication": {
-        "edupush_ssl_verify",
-        "push_allow_polling",
-        "push_ssl_verify",
-        "push_text_on_mobile",
-        "push_title_on_mobile",
-        "push_wait",
-    },
-    "authorization": {"application_tokentype"},
-    "webui": {
-        "show_android_privacyidea_authenticator",
-        "show_ios_privacyidea_authenticator",
-    },
-}
+
+def get_deprecated_policy_actions() -> dict[str, set[str]]:
+    # Policy and token modules depend on config, so import after initialization.
+    from edumfa.lib.policy import ACTION, SCOPE
+    from edumfa.lib.tokens.legacypushtoken import LegacyPushTokenClass
+    from edumfa.lib.tokens.pushtoken import PushTokenClass
+
+    return {
+        SCOPE.ADMIN: {"enrollPUSH", "hotp_2step", "totp_2step"},
+        SCOPE.USER: {"enrollPUSH", "hotp_2step", "totp_2step"},
+        SCOPE.ENROLL: {
+            ACTION.APPIMAGEURL,
+            PushTokenClass.PUSH_ACTION.SSL_VERIFY,
+            ACTION.FORCE_APP_PIN,
+            "hotp_2step_clientsize",
+            "hotp_2step_serversize",
+            "hotp_2step_difficulty",
+            f"hotp_{ACTION.FORCE_APP_PIN}",
+            LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
+            f"push_{ACTION.FORCE_APP_PIN}",
+            f"push_{ACTION.MAXACTIVETOKENUSER}",
+            f"push_{ACTION.MAXTOKENUSER}",
+            LegacyPushTokenClass.PUSH_ACTION.REGISTRATION_URL,
+            LegacyPushTokenClass.PUSH_ACTION.SSL_VERIFY,
+            LegacyPushTokenClass.PUSH_ACTION.TTL,
+            f"totp_{ACTION.FORCE_APP_PIN}",
+            "totp_2step_clientsize",
+            "totp_2step_serversize",
+            "totp_2step_difficulty",
+        },
+        SCOPE.AUTH: {
+            PushTokenClass.PUSH_ACTION.SSL_VERIFY,
+            LegacyPushTokenClass.PUSH_ACTION.ALLOW_POLLING,
+            LegacyPushTokenClass.PUSH_ACTION.SSL_VERIFY,
+            LegacyPushTokenClass.PUSH_ACTION.MOBILE_TEXT,
+            LegacyPushTokenClass.PUSH_ACTION.MOBILE_TITLE,
+            LegacyPushTokenClass.PUSH_ACTION.WAIT,
+        },
+        SCOPE.AUTHZ: {ACTION.APPLICATION_TOKENTYPE},
+        SCOPE.WEBUI: {
+            ACTION.SHOW_ANDROID_AUTHENTICATOR,
+            ACTION.SHOW_IOS_AUTHENTICATOR,
+        },
+    }
 
 
 class SharedConfigClass:
@@ -169,8 +176,6 @@ class SharedConfigClass:
                         "Type": sysconf.Type,
                         "Description": sysconf.Description,
                     }
-                    if sysconf.Key == "totp.useTimeShift":
-                        deprecations.add("The TOTP system default (totp.useTimeShift)")
                 # Load resolver configuration
                 for resolver in Resolver.query.all():
                     resolverdef = {
@@ -211,17 +216,14 @@ class SharedConfigClass:
                             }
                         )
                     realmconfig[realm.name] = realmdef
+                deprecated_actions = get_deprecated_policy_actions()
                 # Load all policies
                 for pol in Policy.query.all():
                     policy = pol.get()
                     policies.append(policy)
-                    if not policy["active"]:
-                        continue
                     scope = policy["scope"]
                     actions = policy["action"]
-                    for action in actions.keys() & DEPRECATED_POLICY_ACTIONS.get(
-                        scope, ()
-                    ):
+                    for action in actions.keys() & deprecated_actions.get(scope, ()):
                         deprecations.add(
                             f"Action {scope}.{action} in policy {pol.name!r}"
                         )
@@ -230,7 +232,7 @@ class SharedConfigClass:
                         "'default'",
                     ):
                         deprecations.add(
-                            f"The default value for {scope}.totp_timeshift in policy {pol.name!r}"
+                            f'The value "default" for {scope}.totp_timeshift in policy {pol.name!r}'
                         )
                 # Load all events
                 for event in EventHandler.query.order_by(EventHandler.ordering):

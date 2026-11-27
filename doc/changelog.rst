@@ -31,7 +31,8 @@ for the current status.
   ``vasco`` or ``certificate`` and plan replacements before upgrading.
   Re-enroll compatible U2F devices as :ref:`webauthn` tokens and replace legacy
   PUSH tokens with :ref:`edupush_token`. For Day Password tokens, consider
-  :ref:`pw_token` or :ref:`indexedsecret_token` with a validity period.
+  :ref:`tan_token` or :ref:`indexedsecret_token` with a validity period.
+  TAN values are single-use. IndexedSecret supports a reusable secret.
   If you rely on Certificate tokens, report your use case in the release
   tracking issue. Archiving that token type is still being considered.
 * **Archived token types.** :ref:`four_eyes_token`, :ref:`questionnaire_token`,
@@ -43,30 +44,34 @@ for the current status.
   system or underlying user directory. Review workflows that depend on
   writing to a resolver, including self-registration and password reset.
 * **Enrollment and authorization policies.** Use standard enrollment for new
-  HOTP and TOTP tokens and review the :ref:`two-step policies <2step_enrollment>`.
+  HOTP and TOTP tokens and remove any :ref:`two-step policies <2step_enrollment>`.
   Review policies that use :ref:`force_app_pin` or
   :ref:`application_tokentype_policy`. The WebUI policies
   ``show_android_privacyidea_authenticator`` and
   ``show_ios_privacyidea_authenticator`` are planned to be replaced by an
-  eduMFA app policy.
+  app agnostic policy.
 * **Token images.** The :ref:`appimageurl enrollment policy <policy_appimageurl>`
   is planned for removal. The planned ``edupush_image_url`` authentication
   policy provides images for eduPUSH tokens after enrollment and during
   challenge polling.
 * **Legacy PUSH policies.** ``enrollPUSH`` and the ``push_*`` enrollment
   and authentication actions are planned for removal, including the
-  per-user token limits.
+  per-user token limits. Use eduPUSH instead.
 * **eduPUSH TLS.** The ``edupush_ssl_verify`` action is planned for removal
-  from enrollment and authentication policies. Use an HTTPS endpoint with
-  a certificate trusted by the mobile device.
+  from enrollment and authentication policies. The new eduMFA Push app
+  requires HTTPS with certificate verification for increased security.
+  Use an HTTPS endpoint with a certificate trusted by the mobile device.
 * **TOTP timeshift.** Review the system-wide ``totp.useTimeShift`` setting and
-  policies with ``totp_timeshift=default``. The system default is planned for
-  removal. Set timeshift explicitly in the token settings. The default will
+  policies with ``totp_timeshift=default``. The ``default`` selection is planned
+  for removal. Set timeshift explicitly in the token settings. The default will
   change from ``True`` to ``False`` in eduMFA 3.0.0.
 * **Installation and integrations.** Plan a move from the eduMFA
-  :ref:`Ubuntu packages <install_ubuntu>` to a supported installation method
-  such as :ref:`install_docker_compose`. The bundled FreeRADIUS plugin is
-  planned for removal from this repository. Use the separate
+  :ref:`Ubuntu packages <install_ubuntu>` to a different installation method
+  such as :ref:`install_docker_compose` or :ref:`pip_install`. The bundled
+  FreeRADIUS plugin is planned for removal from this repository. Existing
+  deployments can continue using it, as it has changed little in recent
+  years and is expected to keep working. New development focuses on the
+  Python plugin in the separate
   `eduMFA RADIUS plugin repository <https://github.com/eduMFA/edumfa-radius>`_.
 * **Scheduled cleanup.** Cleanup of expired challenges and JWT blocklist
   entries during authentication requests is planned for removal. Schedule
@@ -81,9 +86,9 @@ for the current status.
   privacyIDEA's paid subscription system and the welcome dialog code are
   planned for removal. Review customization that relies on these features.
 
-Server logs report deprecated token enrollments and flag active deprecated
-policies, editable resolvers and the TOTP system default when loading
-configuration.
+Server logs report deprecated token enrollments and flag deprecated actions
+in active and inactive policies, including the timeshift ``default``
+selection, and editable resolvers when loading configuration.
 
 Changes
 ~~~~~~~

@@ -33,11 +33,13 @@ from edumfa.lib.config import (
     set_edumfa_config,
     this,
 )
-from edumfa.lib.policy import SCOPE, delete_policy, set_policy
+from edumfa.lib.policy import ACTION, SCOPE, delete_policy, set_policy
 from edumfa.lib.resolver import delete_resolver, save_resolver
 from edumfa.lib.resolvers.PasswdIdResolver import IdResolver as PWResolver
 from edumfa.lib.token import get_dynamic_policy_definitions
 from edumfa.lib.tokens.hotptoken import HotpTokenClass
+from edumfa.lib.tokens.legacypushtoken import LegacyPushTokenClass
+from edumfa.lib.tokens.pushtoken import PushTokenClass
 from edumfa.lib.tokens.totptoken import TotpTokenClass
 from edumfa.models import Config, db, save_config_timestamp
 
@@ -54,24 +56,27 @@ class ConfigTestCase(MyTestCase):
             name="deprecated_enrollment",
             scope=SCOPE.ENROLL,
             action={
-                "appimageurl": "https://example.org/image.png",
+                ACTION.APPIMAGEURL: "https://example.org/image.png",
                 "edupush_force_app_pin": True,
-                "edupush_registration_url": "https://example.org/ttype/edupush",
+                PushTokenClass.PUSH_ACTION.REGISTRATION_URL: "https://example.org/ttype/edupush",
                 "hotp_2step_serversize": "20",
-                "push_max_token_per_user": "2",
+                f"push_{ACTION.MAXTOKENUSER}": "2",
             },
         )
         self.addCleanup(delete_policy, "deprecated_enrollment")
         set_policy(
             name="deprecated_push_authentication",
             scope=SCOPE.AUTH,
-            action={"edupush_allow_polling": "allow", "push_wait": "5"},
+            action={
+                PushTokenClass.PUSH_ACTION.ALLOW_POLLING: "allow",
+                LegacyPushTokenClass.PUSH_ACTION.WAIT: "5",
+            },
         )
         self.addCleanup(delete_policy, "deprecated_push_authentication")
         set_policy(
             name="inactive_enrollment",
             scope=SCOPE.ENROLL,
-            action={"edupush_ssl_verify": "0"},
+            action={PushTokenClass.PUSH_ACTION.SSL_VERIFY: "0"},
             active=False,
         )
         self.addCleanup(delete_policy, "inactive_enrollment")
@@ -81,6 +86,13 @@ class ConfigTestCase(MyTestCase):
             action={"enrollPUSH": True, "hotp_2step": "allow", "totp_2step": "force"},
         )
         self.addCleanup(delete_policy, "two_step_enrollment")
+        set_policy(
+            name="timeshift_default",
+            scope=SCOPE.USER,
+            action={"totp_timeshift": "default"},
+            active=False,
+        )
+        self.addCleanup(delete_policy, "timeshift_default")
         set_edumfa_config("totp.useTimeShift", "True")
         self.addCleanup(delete_edumfa_config, "totp.useTimeShift")
         save_resolver(
@@ -92,7 +104,7 @@ class ConfigTestCase(MyTestCase):
         with self.assertLogs("edumfa.lib.config", level="WARNING") as warnings:
             shared_config.reload_and_clone()
 
-        self.assertEqual(len(warnings.records), 9, warnings.output)
+        self.assertEqual(len(warnings.records), 10, warnings.output)
         warning_text = "\n".join(warnings.output)
         for feature in (
             "admin.enrollPUSH",
@@ -102,10 +114,13 @@ class ConfigTestCase(MyTestCase):
             "enrollment.appimageurl",
             "enrollment.hotp_2step_serversize",
             "enrollment.push_max_token_per_user",
-            "totp.useTimeShift",
+            "enrollment.edupush_ssl_verify",
             "editable_sql",
         ):
             self.assertIn(feature, warning_text)
+
+        self.assertIn('The value "default" for user.totp_timeshift', warning_text)
+        self.assertNotIn("totp.useTimeShift", warning_text)
 
         save_config_timestamp()
         db.session.commit()
@@ -129,7 +144,7 @@ class ConfigTestCase(MyTestCase):
                     f"{scope}.{action}"
                     for action in actions
                     if action.startswith("push_")
-                    or action in ("enrollPUSH", "edupush_ssl_verify")
+                    or action in ("enrollPUSH", PushTokenClass.PUSH_ACTION.SSL_VERIFY)
                 )
 
         with self.assertLogs("edumfa.lib.config", level="WARNING") as warnings:
