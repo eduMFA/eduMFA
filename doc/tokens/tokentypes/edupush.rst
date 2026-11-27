@@ -63,11 +63,24 @@ The smartphone stores this data and creates a new key pair.
 Step 2
 ......
 
-The smartphone sends its Firebase ID, the public key of the keypair,
-the serial number and an enrollment credential back to the
-enrollment URL of the eduMFA server.
+The smartphone sends its public key, serial number and enrollment credential
+to ``POST /ttype/edupush``, along with either a registered Firebase
+Installation ID (``fid``) or an FCM registration token (``fbtoken``).
 
-The server responds with it's public key for this token.
+The server returns its public key for this token.
+
+Updating Firebase registration
+..............................
+
+An enrolled device can send ``new_fid``, ``serial``, an ISO 8601 ``timestamp``
+and ``signature`` to ``POST /ttype/edupush``. Sign the UTF-8 bytes of the
+compact JSON array ``["update_firebase_installation", serial, new_fid, timestamp]``
+with the enrolled device key and Base32-encode the signature. Use the exact
+timestamp sent in the request.
+
+Firebase sends target the FID when one is stored. Existing devices continue
+to receive notifications using their FCM registration token until they
+register a FID.
 
 Authentication
 ~~~~~~~~~~~~~~

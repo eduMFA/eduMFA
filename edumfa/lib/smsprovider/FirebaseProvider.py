@@ -108,7 +108,13 @@ class FirebaseProvider(ISMSProvider):
         self.access_token_info = None
         self.access_token_expires_at = 0
 
-    def submit_message(self, firebase_token, data):
+    def submit_message(
+        self,
+        firebase_token: str | None,
+        data: dict[str, str],
+        *,
+        fid: str | None = None,
+    ) -> bool:
         """
         send a message to a registered Firebase client
         This can be a simple OTP value or a cryptographic challenge response.
@@ -117,6 +123,7 @@ class FirebaseProvider(ISMSProvider):
         :type firebase_token: str
         :param data: the data dictionary part of the message to submit to the phone
         :type data: dict
+        :param fid: the Firebase Installation ID to target when available
         :return: bool
         """
         res = False
@@ -133,7 +140,7 @@ class FirebaseProvider(ISMSProvider):
         fcm_message = {
             "message": {
                 "data": data,
-                "token": firebase_token,
+                **({"fid": fid} if fid else {"token": firebase_token}),
                 "notification": {
                     "title": data.get("title"),
                     "body": data.get("question"),
