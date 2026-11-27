@@ -89,6 +89,7 @@ if sqlalchemy_options_audit := get_var("EDUMFA_AUDIT_SQL_OPTIONS", ""):
     EDUMFA_AUDIT_SQL_OPTIONS = str_to_dict(
         sqlalchemy_options_audit, "EDUMFA_AUDIT_SQL_OPTIONS"
     )
+EDUMFA_LDAP_RESTARTABLE_SLEEPTIME = float(get_var("EDUMFA_LDAP_RESTARTABLE_SLEEPTIME", "2.0"))
 if edumfa_logo := get_var("EDUMFA_LOGO", ""):
     EDUMFA_LOGO = edumfa_logo
 if edumfa_page_title := get_var("EDUMFA_PAGE_TITLE", ""):

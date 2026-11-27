@@ -142,6 +142,8 @@ The ``Cache Timeout`` configures a short living per process cache for LDAP users
 The cache is not shared between different Python processes, if you are running more processes
 in Apache or Nginx. You can set this to ``0`` to deactivate this cache.
 
+.. _ldap_server_pools:
+
 Server Pools
 """"""""""""
 
