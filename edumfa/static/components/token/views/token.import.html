@@ -84,7 +84,7 @@
         be verified.
       </p>
       <select class="form-control" ng-model="form.validateMAC">
-        <option ng-repeat="(key, desc) in verify_pskc_opts" value="{{ key }}">
+        <option ng-repeat="(key, desc) in verify_pskc_opts" ng-value="key">
           {{ desc }}
         </option>
       </select>
