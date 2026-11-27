@@ -142,6 +142,8 @@ The ``Cache Timeout`` configures a short living per process cache for LDAP users
 The cache is not shared between different Python processes, if you are running more processes
 in Apache or Nginx. You can set this to ``0`` to deactivate this cache.
 
+.. _ldap_server_pools:
+
 Server Pools
 """"""""""""
 
@@ -155,6 +157,15 @@ This timeout can be changed by setting ``EDUMFA_LDAP_POOLING_LOOP_TIMEOUT`` to a
 integer in seconds in the :ref:`cfgfile`.
 If no reachable server could be found after the number of rounds specified in the *retry rounds*,
 the request fails.
+
+The resolver uses the *restartable* connection strategy, which transparently
+re-establishes (potentially to the next server in the pool) a connection that
+was closed by the server (for example, when an LDAP server drops idle standby
+connections after a few minutes). Before retrying a request, ldap3 sleeps for a
+fixed interval, defaulting system wide to 2 seconds. On the next request this
+adds a noticeable delay while the connection is rebuilt. This interval can be
+changed by setting ``EDUMFA_LDAP_RESTARTABLE_SLEEPTIME`` to a number of seconds
+(a float such as ``0.1`` is allowed) in the :ref:`cfgfile`.
 
 By default, knowledge about unavailable pool servers is not persisted between requests.
 Consequently, a new request may retry to reach unavailable servers, even though the *skip timeout*

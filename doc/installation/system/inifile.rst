@@ -29,6 +29,10 @@ The file should contain the following contents::
    # SQLALCHEMY_ENGINE_OPTIONS = {"max_identifier_length": 128}
    # Use READ COMMITTED with MySQL/MariaDB (see below)
    # SQLALCHEMY_ENGINE_OPTIONS = {"isolation_level": "READ COMMITTED"}
+   # Seconds to wait on an empty LDAP server pool before starting the next round
+   # EDUMFA_LDAP_POOLING_LOOP_TIMEOUT = 10
+   # Seconds to wait before retrying LDAP requests
+   # EDUMFA_LDAP_RESTARTABLE_SLEEPTIME = 2.0
    # This is used to encrypt the auth_token
    SECRET_KEY = 't0p s3cr3t'
    # This is used to encrypt the admin passwords
