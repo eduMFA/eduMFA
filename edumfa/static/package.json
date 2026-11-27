@@ -10,10 +10,10 @@
     "angular-inform": "0.0.19",
     "angular-sanitize": "1.8.3",
     "angular-ui-bootstrap": "2.5.6",
-    "angular-ui-router": "1.0.30",
+    "angular-ui-router": "1.1.2",
     "bootstrap": "3.4.1",
     "isteven-angular-multiselect": "4.0.0",
-    "jquery": "3.7.1",
+    "jquery": "3.8.0",
     "ng-file-upload": "12.2.13",
     "ng-idle": "1.3.2"
   },
@@ -21,7 +21,7 @@
     "grunt-angular-gettext": "2.5.3",
     "grunt-cli": "1.5.0",
     "grunt-init": "0.3.2",
-    "prettier": "3.9.10"
+    "prettier": "3.10.1"
   },
   "scripts": {
     "format": "prettier --write .",

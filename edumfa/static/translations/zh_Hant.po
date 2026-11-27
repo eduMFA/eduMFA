@@ -253,6 +253,7 @@ msgid "All Policies"
 msgstr "所有政策"
 
 #: components/config/views/config.realms.html
+#: components/dashboard/views/dashboard.html
 msgid "All Realms"
 msgstr "所有領域"
 
@@ -263,10 +264,6 @@ msgstr "所有旋轉變壓器"
 #: components/config/views/config.system.html
 msgid "All SMS Gateways"
 msgstr "所有簡訊閘道"
-
-#: components/dashboard/views/dashboard.html
-msgid "All realms"
-msgstr ""
 
 #: components/token/views/token.html
 msgid "All tokens"
@@ -1758,6 +1755,10 @@ msgid ""
 msgstr "在策略衝突的情況下，具有最低優先級編號的策略將優先。"
 
 #: components/dashboard/views/dashboard.html
+msgid "Inactive"
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
 msgid "Inactive Events"
 msgstr "非活動事件"
 
@@ -1873,6 +1874,10 @@ msgstr "載入連續出版物..."
 #: components/directives/views/directive.assignuser.html
 msgid "Loading users..."
 msgstr "載入使用者..."
+
+#: components/dashboard/views/dashboard.html
+msgid "Loading..."
+msgstr ""
 
 #: templates/menu.html
 #, fuzzy
@@ -3176,6 +3181,10 @@ msgstr ""
 msgid "StartTLS"
 msgstr ""
 
+#: components/dashboard/views/dashboard.html
+msgid "Status"
+msgstr ""
+
 #: components/token/controllers/tokenDetailController.js
 msgid "Successfully authenticated."
 msgstr "已成功通過身份驗證。"
@@ -4387,6 +4396,7 @@ msgstr ""
 msgid "Token Applications"
 msgstr "應用"
 
+#: components/dashboard/views/dashboard.html
 #: components/token/views/token.getserial.html
 msgid "Token Type"
 msgstr "令牌類型"
@@ -4481,7 +4491,6 @@ msgstr "總挑戰："
 msgid "Transaction ID"
 msgstr "交易ID"
 
-#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 msgid "Type"
 msgstr "類型"
@@ -4939,7 +4948,6 @@ msgstr "行動"
 msgid "action detail"
 msgstr "操作詳細資訊"
 
-#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 #: components/token/views/token.list.html
 msgid "active"
@@ -4975,7 +4983,6 @@ msgstr "用戶端"
 msgid "description"
 msgstr "描述"
 
-#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 #: components/token/views/token.list.html
 msgid "disabled"

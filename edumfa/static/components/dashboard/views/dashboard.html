@@ -200,55 +200,69 @@
       <div class="panel panel-default" ng-show="checkRight('statistics_read')">
         <div class="panel-heading" translate>Adoption</div>
         <div class="panel-body">
+          <form>
+            <div class="row">
+              <div class="form-group col-sm-5">
+                <label for="adoption-realm" translate>Realm</label>
+                <select
+                  id="adoption-realm"
+                  class="form-control"
+                  ng-change="countUsersWithToken()"
+                  ng-model="realmForUsersWithToken"
+                >
+                  <option value="any" translate>All Realms</option>
+                  <option
+                    ng-repeat="(realmname, realm) in realms"
+                    ng-value="realmname"
+                  >
+                    {{ realmname }}
+                  </option>
+                </select>
+              </div>
+              <div class="form-group col-sm-3">
+                <label for="adoption-active" translate>Status</label>
+                <select
+                  id="adoption-active"
+                  class="form-control"
+                  ng-change="countUsersWithToken()"
+                  ng-model="activenessForUsersWithToken"
+                >
+                  <option value="any" translate>Any status</option>
+                  <option value="true" translate>Active</option>
+                  <option value="false" translate>Inactive</option>
+                </select>
+              </div>
+              <div class="form-group col-sm-4">
+                <label for="adoption-tokentype" translate>Token Type</label>
+                <select
+                  id="adoption-tokentype"
+                  class="form-control"
+                  ng-change="countUsersWithToken()"
+                  ng-model="tokentypeForUsersWithToken"
+                >
+                  <option value="any" translate>Any type</option>
+                  <option
+                    ng-repeat="tokentype in tokentypes"
+                    ng-value="tokentype"
+                  >
+                    {{ tokentype }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </form>
           <table class="table">
             <tbody>
               <tr>
-                <th>
-                  <label for="realm" translate>Realm</label>
-                  <select
-                    class="form-control"
-                    ng-change="countUsersWithToken()"
-                    ng-model="realmForUsersWithToken"
-                  >
-                    <option value="any" translate>All realms</option>
-                    <option ng-repeat="(realmname, realm) in realms">
-                      {{ realmname }}
-                    </option>
-                  </select>
-                </th>
-                <th>
-                  <label for="active" translate>Active</label>
-                  <select
-                    class="form-control"
-                    ng-change="countUsersWithToken()"
-                    ng-model="activenessForUsersWithToken"
-                  >
-                    <option value="any">
-                      <span translate>Any status</span>
-                    </option>
-                    <option value="True"><span translate>active</span></option>
-                    <option value="False">
-                      <span translate>disabled</span>
-                    </option>
-                  </select>
-                </th>
-                <th>
-                  <label for="tokentype" translate>Type</label>
-                  <select
-                    class="form-control"
-                    ng-change="countUsersWithToken()"
-                    ng-model="tokentypeForUsersWithToken"
-                  >
-                    <option value="any" translate>Any type</option>
-                    <option ng-repeat="tokentype in tokentypes">
-                      {{ tokentype }}
-                    </option>
-                  </select>
-                </th>
-              </tr>
-              <tr>
                 <td translate>Users with matching token:</td>
-                <td>{{ users_with_token }}</td>
+                <td>
+                  <span ng-hide="users_with_token_loading"
+                    >{{ users_with_token }}</span
+                  >
+                  <span ng-show="users_with_token_loading" translate
+                    >Loading...</span
+                  >
+                </td>
               </tr>
             </tbody>
           </table>

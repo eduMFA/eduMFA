@@ -14,12 +14,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - name: Setup Python 3.10
+      - name: Setup Python 3.11
         uses: actions/setup-python@v7
         with:
-          python-version: "3.10.22"
+          python-version: "3.11.16"
       - name: Setup UV
-        uses: astral-sh/setup-uv@v10.2.0
+        uses: astral-sh/setup-uv@v10.4.0
         with:
           enable-cache: true
       - name: Install dependencies
@@ -39,7 +39,7 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
       - name: Cache and install gettext (msgmerge)
-        uses: awalsh128/cache-apt-pkgs-action@v1
+        uses: awalsh128/cache-apt-pkgs-action@v2
         with:
           packages: gettext
           version: 1.0

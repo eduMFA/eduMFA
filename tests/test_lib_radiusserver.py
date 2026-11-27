@@ -194,5 +194,6 @@ class RADIUSServerTestCase(MyTestCase):
         )
         radius = get_radius("myserver2")
         r = RADIUSServer.request(radius.config, "user", "password")
-        # Should result in a timeout and that will return false
-        self.assertEqual(r, False)
+        # pyrad 2.6 signs requests by default, even without enforce_ma.
+        # The mock requires a valid request Message-Authenticator, so this succeeds.
+        self.assertEqual(r, True)

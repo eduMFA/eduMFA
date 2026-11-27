@@ -210,6 +210,7 @@ msgid "All Policies"
 msgstr ""
 
 #: components/config/views/config.realms.html
+#: components/dashboard/views/dashboard.html
 msgid "All Realms"
 msgstr ""
 
@@ -219,10 +220,6 @@ msgstr ""
 
 #: components/config/views/config.system.html
 msgid "All SMS Gateways"
-msgstr ""
-
-#: components/dashboard/views/dashboard.html
-msgid "All realms"
 msgstr ""
 
 #: components/token/views/token.html
@@ -1612,6 +1609,10 @@ msgid ""
 msgstr ""
 
 #: components/dashboard/views/dashboard.html
+msgid "Inactive"
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
 msgid "Inactive Events"
 msgstr ""
 
@@ -1719,6 +1720,10 @@ msgstr ""
 
 #: components/directives/views/directive.assignuser.html
 msgid "Loading users..."
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+msgid "Loading..."
 msgstr ""
 
 #: templates/menu.html
@@ -2943,6 +2948,10 @@ msgstr ""
 msgid "StartTLS"
 msgstr ""
 
+#: components/dashboard/views/dashboard.html
+msgid "Status"
+msgstr ""
+
 #: components/token/controllers/tokenDetailController.js
 msgid "Successfully authenticated."
 msgstr ""
@@ -3866,6 +3875,7 @@ msgstr ""
 msgid "Token Applications"
 msgstr ""
 
+#: components/dashboard/views/dashboard.html
 #: components/token/views/token.getserial.html
 msgid "Token Type"
 msgstr ""
@@ -3955,7 +3965,6 @@ msgstr ""
 msgid "Transaction ID"
 msgstr ""
 
-#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 msgid "Type"
 msgstr ""
@@ -4363,7 +4372,6 @@ msgstr ""
 msgid "action detail"
 msgstr ""
 
-#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 #: components/token/views/token.list.html
 msgid "active"
@@ -4398,7 +4406,6 @@ msgstr ""
 msgid "description"
 msgstr ""
 
-#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 #: components/token/views/token.list.html
 msgid "disabled"

@@ -1,7 +1,7 @@
 import json
 import time
 from base64 import b32decode, b32encode
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from threading import Timer
 from unittest import mock
 
@@ -1215,7 +1215,7 @@ class PushTokenTestCase(MyTestCase):
             timestamp_fmt,
             10,
         )
-        timestamp = datetime(2020, 11, 13, 13, 27, tzinfo=timezone.utc)
+        timestamp = datetime(2020, 11, 13, 13, 27, tzinfo=UTC)
         with mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt:
             mock_dt.now.return_value = timestamp + timedelta(minutes=9)
             LegacyPushTokenClass._check_timestamp_in_range(timestamp.isoformat(), 10)
@@ -1304,7 +1304,7 @@ class PushTokenTestCase(MyTestCase):
         req = Request(builder.get_environ())
         req.all_data = {
             "serial": "SPASS01",
-            "timestamp": (datetime.now(timezone.utc) - timedelta(minutes=2)).isoformat(),
+            "timestamp": (datetime.now(UTC) - timedelta(minutes=2)).isoformat(),
             "signature": "unknown",
         }
         self.assertRaisesRegex(
@@ -1319,7 +1319,7 @@ class PushTokenTestCase(MyTestCase):
         req = Request(builder.get_environ())
         req.all_data = {
             "serial": "SPASS01",
-            "timestamp": (datetime.now(timezone.utc) + timedelta(minutes=2)).isoformat(),
+            "timestamp": (datetime.now(UTC) + timedelta(minutes=2)).isoformat(),
             "signature": "unknown",
         }
         self.assertRaisesRegex(
@@ -1420,7 +1420,7 @@ class PushTokenTestCase(MyTestCase):
         req_data = {
             "new_fb_token": "firebasetoken2",
             "serial": serial,
-            "timestamp": datetime.now(tz=timezone.utc).isoformat(),
+            "timestamp": datetime.now(tz=UTC).isoformat(),
         }
 
         # now we perform the firebase token update with a broken signature
@@ -1480,7 +1480,7 @@ class PushTokenTestCase(MyTestCase):
         serial = tok.get_serial()
 
         # this is the default timestamp for polling in this test
-        timestamp = datetime(2020, 6, 19, 13, 27, tzinfo=timezone.utc)
+        timestamp = datetime(2020, 6, 19, 13, 27, tzinfo=UTC)
 
         # create a poll request
         # first create a signature
@@ -2932,7 +2932,7 @@ class EduPushTokenTestCase(MyTestCase):
             timestamp_fmt,
             10,
         )
-        timestamp = datetime(2020, 11, 13, 13, 27, tzinfo=timezone.utc)
+        timestamp = datetime(2020, 11, 13, 13, 27, tzinfo=UTC)
         with mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt:
             mock_dt.now.return_value = timestamp + timedelta(minutes=9)
             PushTokenClass._check_timestamp_in_range(timestamp.isoformat(), 10)
@@ -3017,7 +3017,7 @@ class EduPushTokenTestCase(MyTestCase):
         req = Request(builder.get_environ())
         req.all_data = {
             "serial": "SPASS01",
-            "timestamp": (datetime.now(timezone.utc) - timedelta(minutes=2)).isoformat(),
+            "timestamp": (datetime.now(UTC) - timedelta(minutes=2)).isoformat(),
             "signature": "unknown",
         }
         self.assertRaisesRegex(
@@ -3032,7 +3032,7 @@ class EduPushTokenTestCase(MyTestCase):
         req = Request(builder.get_environ())
         req.all_data = {
             "serial": "SPASS01",
-            "timestamp": (datetime.now(timezone.utc) + timedelta(minutes=2)).isoformat(),
+            "timestamp": (datetime.now(UTC) + timedelta(minutes=2)).isoformat(),
             "signature": "unknown",
         }
         self.assertRaisesRegex(
@@ -3133,7 +3133,7 @@ class EduPushTokenTestCase(MyTestCase):
         req_data = {
             "new_fb_token": "firebasetoken2",
             "serial": serial,
-            "timestamp": datetime.now(tz=timezone.utc).isoformat(),
+            "timestamp": datetime.now(tz=UTC).isoformat(),
         }
 
         # now we perform the firebase token update with a broken signature
@@ -3193,7 +3193,7 @@ class EduPushTokenTestCase(MyTestCase):
         serial = tok.get_serial()
 
         # this is the default timestamp for polling in this test
-        timestamp = datetime(2020, 6, 19, 13, 27, tzinfo=timezone.utc)
+        timestamp = datetime(2020, 6, 19, 13, 27, tzinfo=UTC)
 
         # create a poll request
         # first create a signature

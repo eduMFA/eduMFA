@@ -5,7 +5,7 @@ Ubuntu Packages
 
 .. index:: ubuntu
 
-There are ready made packages for Ubuntu 22.04LTS and 24.04LTS.
+The packaging supports Ubuntu 24.04 LTS and 26.04 LTS.
 
 .. note:: The packages ``edumfa-apache2`` and ``edumfa-nginx`` assume
    that you want to run a eduMFA system. These packages deactivate all
@@ -45,7 +45,15 @@ You now need to add the signing key to your system. The following instructions
 
     mv eduMFA-Release.asc /etc/apt/trusted.gpg.d/eduMFA-Release.asc
 
-Now you need to add the repository for your release (jammy/22.04LTS or noble/24.04LTS) You can do this by running the command:
+Add the repository for your Ubuntu release. For Ubuntu 26.04 LTS, use the
+repository once packages have been published, or build them from source as
+described below.
+
+.. tab:: Ubuntu 26.04 LTS
+
+    .. code-block:: bash
+
+        add-apt-repository "deb https://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-resolute resolute main"
 
 .. tab:: Ubuntu 24.04LTS
 
@@ -53,26 +61,20 @@ Now you need to add the repository for your release (jammy/22.04LTS or noble/24.
 
         add-apt-repository http://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-noble
 
-.. tab:: Ubuntu 22.04LTS
+As an alternative you can add the repo in a dedicated file. Create a new
+file ``/etc/apt/sources.list.d/eduMFA-community.list`` with the following contents:
+
+.. tab:: Ubuntu 26.04 LTS
 
     .. code-block:: bash
 
-        add-apt-repository http://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-jammy
-
-As an alternative you can add the repo in a dedicated file. Create a new
-file ``/etc/apt/sources.list.d/eduMFA-community.list`` with the following contents:
+        deb https://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-resolute resolute main
 
 .. tab:: Ubuntu 24.04LTS
 
     .. code-block:: bash
 
         deb http://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-noble noble main
-
-.. tab:: Ubuntu 22.04LTS
-
-    .. code-block:: bash
-
-        deb http://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-jammy jammy main
 
 
 Installation of eduMFA 1.x or higher
@@ -126,19 +128,19 @@ Choose the packages you want to build based on your requirements. Use one of the
 
         cp -r deploy/ubuntu-radius debian
 
-Update the Linux distribution version in the changelog file. For Ubuntu 24.04LTS, you must also force the use of Python3.9.
+Set the Ubuntu release codename in the package changelog.
+
+.. tab:: Ubuntu 26.04 LTS
+
+    .. code-block:: bash
+
+        sed -i 's/{{CODENAME}}/resolute/g' debian/changelog
 
 .. tab:: Ubuntu 24.04LTS
 
     .. code-block:: bash
 
         sed -i 's/{{CODENAME}}/noble/g' debian/changelog
-
-.. tab:: Ubuntu 22.04LTS
-
-    .. code-block:: bash
-
-        sed -i 's/{{CODENAME}}/jammy/g' debian/changelog
 
 Install build dependencies and build the package::
 

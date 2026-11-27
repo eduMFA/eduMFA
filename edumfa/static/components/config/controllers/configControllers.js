@@ -560,6 +560,10 @@ myApp.controller("tokenConfigController", [
           $scope.form["sms.Provider"] || $scope.defaultSMSProvider;
         // Email
         $scope.form["email.password.type"] = "password";
+        // The server uses the time shift as long as it is not configured.
+        if ($scope.form["totp.useTimeShift"] === undefined) {
+          $scope.form["totp.useTimeShift"] = $scope.formInit.totpUseTimeShift;
+        }
         // We need to convert the values to bools - otherwise we have
         // problems when unchecking a checked checkbox
         $scope.form["totp.useTimeShift"] = $scope.isChecked(

@@ -255,6 +255,7 @@ msgid "All Policies"
 msgstr "Elk Beleid"
 
 #: components/config/views/config.realms.html
+#: components/dashboard/views/dashboard.html
 msgid "All Realms"
 msgstr "Alle Realms"
 
@@ -265,10 +266,6 @@ msgstr "Alle Resolvers"
 #: components/config/views/config.system.html
 msgid "All SMS Gateways"
 msgstr "Alle SMS Gateways"
-
-#: components/dashboard/views/dashboard.html
-msgid "All realms"
-msgstr ""
 
 #: components/token/views/token.html
 msgid "All tokens"
@@ -1773,6 +1770,10 @@ msgstr ""
 "voorrang krijgen."
 
 #: components/dashboard/views/dashboard.html
+msgid "Inactive"
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
 msgid "Inactive Events"
 msgstr "Niet-actieve gebeurtenissen"
 
@@ -1893,6 +1894,10 @@ msgstr "Serienummers laden..."
 #: components/directives/views/directive.assignuser.html
 msgid "Loading users..."
 msgstr "Gebruikers laden ..."
+
+#: components/dashboard/views/dashboard.html
+msgid "Loading..."
+msgstr ""
 
 #: templates/menu.html
 msgid "Lock screen"
@@ -3174,6 +3179,10 @@ msgstr ""
 msgid "StartTLS"
 msgstr "StartTLS"
 
+#: components/dashboard/views/dashboard.html
+msgid "Status"
+msgstr ""
+
 #: components/token/controllers/tokenDetailController.js
 msgid "Successfully authenticated."
 msgstr "Authenticatie gelukt."
@@ -4423,6 +4432,7 @@ msgstr ""
 msgid "Token Applications"
 msgstr "Applicatie"
 
+#: components/dashboard/views/dashboard.html
 #: components/token/views/token.getserial.html
 msgid "Token Type"
 msgstr "Token type"
@@ -4515,7 +4525,6 @@ msgstr "Token challenges:"
 msgid "Transaction ID"
 msgstr "Transactie ID"
 
-#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 msgid "Type"
 msgstr "Type"
@@ -4984,7 +4993,6 @@ msgstr "acitie"
 msgid "action detail"
 msgstr "actiedetail"
 
-#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 #: components/token/views/token.list.html
 msgid "active"
@@ -5019,7 +5027,6 @@ msgstr "cliënt"
 msgid "description"
 msgstr "beschrijving"
 
-#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 #: components/token/views/token.list.html
 msgid "disabled"

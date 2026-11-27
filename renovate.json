@@ -1,12 +1,15 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended", ":pinVersions"],
-  "schedule": ["monthly"],
+  "extends": ["config:recommended", ":preserveSemverRanges"],
+  "timezone": "Europe/Berlin",
+  "schedule": ["* 0-6 * * 1"],
+  "separateMinorPatch": true,
   "pip_requirements": {
     "enabled": false
   },
   "lockFileMaintenance": {
     "enabled": true,
+    "schedule": ["* 0-6 * * 1"],
     "branchTopic": "renovate-lock-file-maintenance",
     "commitMessageAction": "Update lock file"
   },
@@ -19,6 +22,29 @@
     }
   },
   "packageRules": [
+    {
+      "description": "Keep minor and major updates individual",
+      "matchUpdateTypes": ["minor", "major"],
+      "groupName": null
+    },
+    {
+      "description": "Group Python patch updates",
+      "matchManagers": ["pep621", "pip-compile"],
+      "matchUpdateTypes": ["patch"],
+      "groupName": "Python dependencies (patch)"
+    },
+    {
+      "description": "Group frontend patch updates",
+      "matchManagers": ["bun", "npm"],
+      "matchUpdateTypes": ["patch"],
+      "groupName": "frontend dependencies (patch)"
+    },
+    {
+      "description": "Group GitHub Actions patch updates",
+      "matchManagers": ["github-actions"],
+      "matchUpdateTypes": ["patch"],
+      "groupName": "GitHub Actions (patch)"
+    },
     {
       "matchManagers": ["github-actions"],
       "matchDepNames": ["python"],

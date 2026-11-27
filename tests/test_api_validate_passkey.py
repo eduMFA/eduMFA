@@ -1,7 +1,7 @@
 import json
 import logging
 import os
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from struct import pack
 
 import jwt
@@ -365,8 +365,8 @@ class PasskeyTestCase(PasskeyBaseTestCase):
             self.app.secret_key,
             algorithms=["HS256"],
         )
-        expiration = datetime.fromtimestamp(claims.get("exp"), tz=timezone.utc)
-        self.assertGreater(expiration, datetime.now(tz=timezone.utc))
+        expiration = datetime.fromtimestamp(claims.get("exp"), tz=UTC)
+        self.assertGreater(expiration, datetime.now(tz=UTC))
 
         resp = self.simulator.get(
             data["detail"]["attributes"]["webAuthnSignRequest"],
@@ -408,13 +408,13 @@ class PasskeyTestCase(PasskeyBaseTestCase):
             self.app.secret_key,
             algorithms=["HS256"],
         )
-        expiration = datetime.fromtimestamp(claims.get("exp"), tz=timezone.utc)
+        expiration = datetime.fromtimestamp(claims.get("exp"), tz=UTC)
 
         # Verify that the expiration is at least 118 seconds in the future
         # (120 seconds would be ideal, but JWT exp is stored as integer seconds which truncates
         # microseconds, so we allow a ~2 second margin for truncation and test execution time)
         self.assertGreater(
-            expiration, datetime.now(tz=timezone.utc) + timedelta(seconds=118)
+            expiration, datetime.now(tz=UTC) + timedelta(seconds=118)
         )
 
         resp = self.simulator.get(
@@ -574,9 +574,9 @@ class PasskeyTestCase(PasskeyBaseTestCase):
             {
                 "nonce": claims.get("nonce"),
                 "transactionId": claims.get("transactionId"),
-                "exp": datetime.now(tz=timezone.utc) - timedelta(seconds=1),
-                "iat": datetime.now(tz=timezone.utc),
-                "nbf": datetime.now(tz=timezone.utc),
+                "exp": datetime.now(tz=UTC) - timedelta(seconds=1),
+                "iat": datetime.now(tz=UTC),
+                "nbf": datetime.now(tz=UTC),
             },
             self.app.secret_key,
             algorithm="HS256",
