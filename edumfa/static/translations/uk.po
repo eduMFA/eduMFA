@@ -23,9 +23,33 @@ msgstr "#"
 msgid "(none)"
 msgstr "(немає)"
 
+#: components/monitoring/controllers/monitoringControllers.js
+msgid "1 Month"
+msgstr ""
+
+#: components/monitoring/controllers/monitoringControllers.js
+msgid "1 Week"
+msgstr ""
+
+#: components/monitoring/controllers/monitoringControllers.js
+msgid "1 Year"
+msgstr ""
+
+#: components/monitoring/controllers/monitoringControllers.js
+msgid "24 hours"
+msgstr ""
+
+#: components/monitoring/controllers/monitoringControllers.js
+msgid "3 Months"
+msgstr ""
+
 #: components/directives/views/directive.csvdownload.html
 msgid "45% Complete"
 msgstr "45% Завершено"
+
+#: components/monitoring/controllers/monitoringControllers.js
+msgid "6 Months"
+msgstr ""
 
 #: components/config/views/config.periodictasks.details.html
 msgid ""
@@ -235,6 +259,10 @@ msgstr "Адміністратор"
 
 #: components/dashboard/views/dashboard.html
 msgid "Adoption"
+msgstr ""
+
+#: components/monitoring/controllers/monitoringControllers.js
+msgid "All"
 msgstr ""
 
 #: components/config/views/config.system.html
@@ -677,6 +705,10 @@ msgstr "Параметри підключення"
 #: components/config/views/config.caconnectors.microsoft.html
 msgid "Connector name"
 msgstr "Назва з'єднувача"
+
+#: components/dashboard/views/dashboard.html
+msgid "Could not be loaded"
+msgstr ""
 
 #: components/token/views/token.applications.offline.html
 #: components/token/views/token.details.html
@@ -1841,6 +1873,10 @@ msgstr "Останнє оновлення визначень"
 msgid "Last seen:"
 msgstr "Востаннє бачили:"
 
+#: components/dashboard/views/dashboard.html
+msgid "Legend:"
+msgstr ""
+
 #: components/dialogs/views/dialog.about.html
 msgid "Licensed under"
 msgstr "Ліцензовано під"
@@ -1885,6 +1921,10 @@ msgstr "Перелік токенів"
 msgid "Loading Machines..."
 msgstr "Завантаження комп'ютерів..."
 
+#: components/dashboard/views/dashboard.html
+msgid "Loading metrics…"
+msgstr ""
+
 #: components/directives/views/directive.assigntoken.html
 #: components/directives/views/directive.attachtoken.html
 msgid "Loading serials..."
@@ -1896,6 +1936,10 @@ msgstr "Завантаження користувачів..."
 
 #: components/dashboard/views/dashboard.html
 msgid "Loading..."
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+msgid "Loading…"
 msgstr ""
 
 #: templates/menu.html
@@ -1994,6 +2038,14 @@ msgstr "Максимальна кількість успішних автент�
 msgid "Method"
 msgstr "Метод"
 
+#: components/dashboard/views/dashboard.html
+msgid "Metrics could not be loaded."
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+msgid "Metrics:"
+msgstr ""
+
 #: components/config/views/config.caconnectors.microsoft.html
 msgid "Microsoft CA worker hostname"
 msgstr ""
@@ -2006,6 +2058,10 @@ msgstr ""
 #: components/user/views/user.password.html
 msgid "Mobile"
 msgstr "Мобільний"
+
+#: components/dashboard/views/dashboard.html
+msgid "Monitoring Chart"
+msgstr ""
 
 #: components/config/views/config.resolvers.ldap.html
 msgid "Multivalue Attributes"
@@ -2091,9 +2147,19 @@ msgstr "Не вдалося знайти серійний номер для зн
 msgid "No anonymous referral chasing"
 msgstr "Немає анонімного переходу за посиланнями"
 
+#: components/dashboard/views/dashboard.html
+msgid "No data"
+msgstr ""
+
 #: components/directives/views/directive.attachmachine.html
 msgid "No machine found"
 msgstr "Комп'ютер не знайдено"
+
+#: components/dashboard/views/dashboard.html
+msgid ""
+"No metrics found. Monitoring may not be set up yet for this\n"
+"            instance."
+msgstr ""
 
 #: components/config/views/config.resolvers.ldap.html
 msgid "No retrieval of schema information"
@@ -4037,6 +4103,10 @@ msgstr ""
 
 #: components/config/views/config.token.tiqr.html
 msgid "TiQR Token settings"
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+msgid "Time range:"
 msgstr ""
 
 #: components/config/views/config.radius.edit.html

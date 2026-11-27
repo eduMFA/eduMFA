@@ -1,6 +1,9 @@
 import datetime
+from unittest.mock import patch
 
-from edumfa.lib.monitoringstats import write_stats
+from sqlalchemy.exc import OperationalError
+
+from edumfa.lib.monitoringstats import _get_monitoring, write_stats
 from edumfa.lib.token import init_token
 from edumfa.lib.tokenclass import AUTH_DATE_FORMAT
 from edumfa.lib.user import User
@@ -10,6 +13,47 @@ from .base import MyApiTestCase
 
 
 class APIMonitoringTestCase(MyApiTestCase):
+    def test_chart_requests_report_database_failure(self) -> None:
+        for query in ({}, {"stats_key": "auth/success", "max_points": "3"}):
+            with (
+                self.subTest(query=query),
+                self.app.test_request_context(
+                    "/monitoring/",
+                    query_string=query,
+                    headers={"Authorization": self.at},
+                ),
+            ):
+                monitoring = _get_monitoring()
+                failure = OperationalError(
+                    None, None, ConnectionError("database offline")
+                )
+                with patch.object(monitoring.session, "execute", side_effect=failure):
+                    response = self.app.full_dispatch_request()
+
+                self.assertEqual(500, response.status_code, response)
+                self.assertEqual(
+                    "A database error occurred.",
+                    response.json["result"]["error"]["message"],
+                )
+
+    def test_get_stats_by_query_key_with_slash(self) -> None:
+        stats_key = "auth/success"
+        start = datetime.datetime(2026, 1, 1, tzinfo=datetime.UTC)
+        for index, value in enumerate((1, 10, 1, 2)):
+            write_stats(
+                stats_key, value, timestamp=start + datetime.timedelta(seconds=index)
+            )
+
+        with self.app.test_request_context(
+            "/monitoring/",
+            query_string={"stats_key": stats_key, "max_points": 3},
+            headers={"Authorization": self.at},
+        ):
+            response = self.app.full_dispatch_request()
+            self.assertEqual(200, response.status_code, response)
+            values = response.json["result"]["value"]
+            self.assertEqual([1, 10, 2], [value for _, value in values])
+
     def test_01_get_stats(self):
         # create some statistics
 
@@ -45,6 +89,39 @@ class APIMonitoringTestCase(MyApiTestCase):
             self.assertEqual(result.get("value")[1][1], 2)
             self.assertEqual(result.get("value")[2][1], 3)
             self.assertEqual(result.get("value")[3][1], 4)
+
+        # Downsampling preserves the first and last values and respects the limit.
+        with self.app.test_request_context(
+            "/monitoring/key1",
+            data={"max_points": 3},
+            method="GET",
+            headers={"Authorization": self.at},
+        ):
+            res = self.app.full_dispatch_request()
+            self.assertEqual(200, res.status_code, res)
+            values = res.json.get("result").get("value")
+            self.assertEqual(3, len(values))
+            self.assertEqual(1, values[0][1])
+            self.assertEqual(4, values[-1][1])
+
+        for invalid_max_points in ("invalid", 2, 10_001):
+            with self.app.test_request_context(
+                "/monitoring/key1",
+                data={"max_points": invalid_max_points},
+                method="GET",
+                headers={"Authorization": self.at},
+            ):
+                res = self.app.full_dispatch_request()
+                self.assertEqual(400, res.status_code, res)
+
+        with self.app.test_request_context(
+            "/monitoring/key1",
+            json={"max_points": 3.5},
+            method="GET",
+            headers={"Authorization": self.at},
+        ):
+            res = self.app.full_dispatch_request()
+            self.assertEqual(400, res.status_code, res)
 
         # check values of key1, with a start value in the past
         with self.app.test_request_context(

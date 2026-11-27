@@ -20,8 +20,32 @@ msgstr ""
 msgid "(none)"
 msgstr ""
 
+#: components/monitoring/controllers/monitoringControllers.js
+msgid "1 Month"
+msgstr ""
+
+#: components/monitoring/controllers/monitoringControllers.js
+msgid "1 Week"
+msgstr ""
+
+#: components/monitoring/controllers/monitoringControllers.js
+msgid "1 Year"
+msgstr ""
+
+#: components/monitoring/controllers/monitoringControllers.js
+msgid "24 hours"
+msgstr ""
+
+#: components/monitoring/controllers/monitoringControllers.js
+msgid "3 Months"
+msgstr ""
+
 #: components/directives/views/directive.csvdownload.html
 msgid "45% Complete"
+msgstr ""
+
+#: components/monitoring/controllers/monitoringControllers.js
+msgid "6 Months"
 msgstr ""
 
 #: components/config/views/config.periodictasks.details.html
@@ -189,6 +213,10 @@ msgstr ""
 
 #: components/dashboard/views/dashboard.html
 msgid "Adoption"
+msgstr ""
+
+#: components/monitoring/controllers/monitoringControllers.js
+msgid "All"
 msgstr ""
 
 #: components/config/views/config.system.html
@@ -602,6 +630,10 @@ msgstr ""
 #: components/config/views/config.caconnectors.local.html
 #: components/config/views/config.caconnectors.microsoft.html
 msgid "Connector name"
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+msgid "Could not be loaded"
 msgstr ""
 
 #: components/token/views/token.applications.offline.html
@@ -1679,6 +1711,10 @@ msgstr ""
 msgid "Last seen:"
 msgstr ""
 
+#: components/dashboard/views/dashboard.html
+msgid "Legend:"
+msgstr ""
+
 #: components/dialogs/views/dialog.about.html
 msgid "Licensed under"
 msgstr ""
@@ -1719,6 +1755,10 @@ msgstr ""
 msgid "Loading Machines..."
 msgstr ""
 
+#: components/dashboard/views/dashboard.html
+msgid "Loading metrics…"
+msgstr ""
+
 #: components/directives/views/directive.assigntoken.html
 #: components/directives/views/directive.attachtoken.html
 msgid "Loading serials..."
@@ -1730,6 +1770,10 @@ msgstr ""
 
 #: components/dashboard/views/dashboard.html
 msgid "Loading..."
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+msgid "Loading…"
 msgstr ""
 
 #: templates/menu.html
@@ -1823,6 +1867,14 @@ msgstr ""
 msgid "Method"
 msgstr ""
 
+#: components/dashboard/views/dashboard.html
+msgid "Metrics could not be loaded."
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+msgid "Metrics:"
+msgstr ""
+
 #: components/config/views/config.caconnectors.microsoft.html
 msgid "Microsoft CA worker hostname"
 msgstr ""
@@ -1834,6 +1886,10 @@ msgstr ""
 #: components/register/views/register.html
 #: components/user/views/user.password.html
 msgid "Mobile"
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+msgid "Monitoring Chart"
 msgstr ""
 
 #: components/config/views/config.resolvers.ldap.html
@@ -1919,8 +1975,18 @@ msgstr ""
 msgid "No anonymous referral chasing"
 msgstr ""
 
+#: components/dashboard/views/dashboard.html
+msgid "No data"
+msgstr ""
+
 #: components/directives/views/directive.attachmachine.html
 msgid "No machine found"
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+msgid ""
+"No metrics found. Monitoring may not be set up yet for this\n"
+"            instance."
 msgstr ""
 
 #: components/config/views/config.resolvers.ldap.html
@@ -3844,6 +3910,10 @@ msgstr ""
 
 #: components/config/views/config.token.tiqr.html
 msgid "TiQR Token settings"
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+msgid "Time range:"
 msgstr ""
 
 #: components/config/views/config.radius.edit.html
