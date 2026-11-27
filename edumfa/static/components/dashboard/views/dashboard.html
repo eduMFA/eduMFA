@@ -213,7 +213,7 @@
                   <option value="any" translate>All Realms</option>
                   <option
                     ng-repeat="(realmname, realm) in realms"
-                    value="{{ realmname }}"
+                    ng-value="realmname"
                   >
                     {{ realmname }}
                   </option>
@@ -243,7 +243,7 @@
                   <option value="any" translate>Any type</option>
                   <option
                     ng-repeat="tokentype in tokentypes"
-                    value="{{ tokentype }}"
+                    ng-value="tokentype"
                   >
                     {{ tokentype }}
                   </option>
