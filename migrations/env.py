@@ -1,5 +1,4 @@
 from logging.config import fileConfig
-from urllib.parse import quote
 
 from alembic import context
 from sqlalchemy import engine_from_config, pool
@@ -73,23 +72,21 @@ def run_migrations_online():
     and associate a connection with the context.
 
     """
-    # FIX for Postgres updates
-    url = config.get_section(config.config_ini_section).get("sqlalchemy.url")
-    driver = url.split(":")[0]
-
-    if driver == "postgresql+psycopg2":
-        engine = engine_from_config(
-            config.get_section(config.config_ini_section),
-            prefix="sqlalchemy.",
-            isolation_level="AUTOCOMMIT",
-            poolclass=pool.NullPool,
-        )
-    else:
-        engine = engine_from_config(
-            config.get_section(config.config_ini_section),
-            prefix="sqlalchemy.",
-            poolclass=pool.NullPool,
-        )
+    section = config.get_section(config.config_ini_section)
+    assert section is not None
+    url = make_url(section["sqlalchemy.url"])
+    # Historical PostgreSQL revisions use AUTOCOMMIT to recover from DDL errors.
+    options = (
+        {"isolation_level": "AUTOCOMMIT"}
+        if url.get_backend_name() == "postgresql"
+        else {}
+    )
+    engine = engine_from_config(
+        section,
+        prefix="sqlalchemy.",
+        poolclass=pool.NullPool,
+        **options,
+    )
 
     connection = engine.connect()
     context.configure(

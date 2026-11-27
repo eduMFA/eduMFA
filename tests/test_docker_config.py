@@ -158,7 +158,7 @@ class DockerEnvConfigTestCase(unittest.TestCase):
         config = self._import_config_with_env(
             {
                 "DB_DATABASE": "testdb",
-                "DB_DRIVER": "postgresql",
+                "DB_DRIVER": "postgresql+psycopg",
                 "DB_HOSTNAME": "localhost",
                 "DB_PASSWORD": "testpass",
                 "DB_USER": "testuser",
@@ -191,7 +191,7 @@ class DockerEnvConfigTestCase(unittest.TestCase):
         self.assertEqual(config.SECRET_KEY, "my_secret")
         self.assertEqual(
             config.SQLALCHEMY_DATABASE_URI,
-            "postgresql://testuser:testpass@localhost/testdb",
+            "postgresql+psycopg://testuser:testpass@localhost/testdb",
         )
         self.assertEqual(
             config.SQLALCHEMY_ENGINE_OPTIONS,

@@ -32,6 +32,7 @@ backup_cli = AppGroup("backup", help="Perform backup operations")
 
 MYSQL_DIALECTS = ["mysql", "pymysql", "mysql+pymysql", "mariadb+pymysql"]
 PSQL_DIALECTS = [
+    "postgresql",
     "postgresql+psycopg",
     "postgresql+psycopg2",
     "postgresql+pg8000",

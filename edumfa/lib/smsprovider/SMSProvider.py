@@ -279,7 +279,7 @@ def delete_smsgateway_key_generic(id, key, Type="option"):
     :return: True
     """
     return fetch_one_resource(
-        SMSGatewayOption, gateway_id=id, Key=key, Type=Type
+        SMSGatewayOption, gateway_id=int(id), Key=key, Type=Type
     ).delete()
 
 

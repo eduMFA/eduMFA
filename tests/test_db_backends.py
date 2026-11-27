@@ -1,7 +1,10 @@
 import tempfile
 from contextlib import contextmanager
+from pathlib import Path
 
 import pytest
+from alembic.migration import MigrationContext
+from flask_migrate import stamp, upgrade
 from sqlalchemy import text
 
 from edumfa.app import create_app
@@ -22,16 +25,9 @@ def _require_docker():
 @contextmanager
 def _postgres_container():
     _require_docker()
-    PostgresContainer = pytest.importorskip(
-        "testcontainers.postgres"
-    ).PostgresContainer
-    with PostgresContainer("postgres:18-alpine") as postgres:
-        database_url = postgres.get_connection_url()
-        if database_url.startswith("postgresql://"):
-            database_url = database_url.replace(
-                "postgresql://", "postgresql+psycopg2://", 1
-            )
-        yield "postgres", database_url
+    PostgresContainer = pytest.importorskip("testcontainers.postgres").PostgresContainer
+    with PostgresContainer("postgres:18-alpine", driver="psycopg") as postgres:
+        yield "postgres", postgres.get_connection_url()
 
 
 @contextmanager
@@ -94,8 +90,10 @@ def test_schema_can_be_created_on_supported_database_backends(app_with_database)
         row = connection.execute(text("select count(*) from token")).one()
 
     assert row[0] == 0
-    assert db.engine.url.get_backend_name() in {"postgresql", "mysql"}
-    assert backend in {"postgres", "mariadb"}
+    assert (
+        db.engine.dialect.driver
+        == {"postgres": "psycopg", "mariadb": "pymysql"}[backend]
+    )
 
 
 def test_token_roundtrip_on_supported_database_backends(app_with_database):
@@ -107,3 +105,16 @@ def test_token_roundtrip_on_supported_database_backends(app_with_database):
 
     assert loaded.tokentype == "hotp"
     assert loaded.description == "created by testcontainers backend test"
+
+
+@pytest.mark.usefixtures("app_with_database")
+def test_alembic_upgrade_on_supported_database_backends() -> None:
+    migration_dir = str(Path(__file__).resolve().parents[1] / "migrations")
+    stamp(directory=migration_dir, revision="9cad6f046bd2")
+    upgrade(directory=migration_dir, revision="1b2262ddbf6b")
+
+    with db.engine.connect() as connection:
+        assert (
+            MigrationContext.configure(connection).get_current_revision()
+            == "1b2262ddbf6b"
+        )

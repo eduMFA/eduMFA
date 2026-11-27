@@ -9,6 +9,7 @@ on:
     paths:
     - '.github/workflows/test.yml'
     - 'edumfa/**/*.py'
+    - 'migrations/**'
     - 'tests/**'
     - 'tools/**'
     - 'edumfa-manage'
@@ -51,22 +52,20 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - database: postgres-17-psycopg2
+          - database: postgres-17-psycopg
             image: postgres:17-alpine
             port: 5432
-            test_database_url: postgresql+psycopg2://edumfa:edumfa@127.0.0.1:5432/edumfa
+            test_database_url: postgresql://edumfa:edumfa@127.0.0.1:5432/edumfa
             edumfa_config_file: ''
             health_cmd: pg_isready -U edumfa -d edumfa
-            extra_sync_args: "--extra postgres"
-            system_deps: "libpq-dev"
-          - database: postgres-18-psycopg2
+            system_deps: "libpq5"
+          - database: postgres-18-psycopg
             image: postgres:18-alpine
             port: 5432
-            test_database_url: postgresql+psycopg2://edumfa:edumfa@127.0.0.1:5432/edumfa
+            test_database_url: postgresql+psycopg://edumfa:edumfa@127.0.0.1:5432/edumfa
             edumfa_config_file: ''
             health_cmd: pg_isready -U edumfa -d edumfa
-            extra_sync_args: "--extra postgres"
-            system_deps: "libpq-dev"
+            system_deps: "libpq5"
           - database: mariadb-11.5
             # MariaDB version 11.5 should continue be tested for the foreseeable
             # future, as that version is vulnerable to
@@ -77,7 +76,6 @@ jobs:
             test_database_url: mysql+pymysql://edumfa:edumfa@127.0.0.1:3306/edumfa
             edumfa_config_file: tests/testdata/edumfa-mariadb.cfg
             health_cmd: mariadb-admin ping -h 127.0.0.1 -uedumfa -pedumfa
-            extra_sync_args: ""
             system_deps: ""
           - database: mariadb-11.8
             image: mariadb:11.8
@@ -85,7 +83,6 @@ jobs:
             test_database_url: mysql+pymysql://edumfa:edumfa@127.0.0.1:3306/edumfa
             edumfa_config_file: tests/testdata/edumfa-mariadb.cfg
             health_cmd: mariadb-admin ping -h 127.0.0.1 -uedumfa -pedumfa
-            extra_sync_args: ""
             system_deps: ""
           - database: mariadb-12.3
             image: mariadb:12.3
@@ -93,7 +90,6 @@ jobs:
             test_database_url: mysql+pymysql://edumfa:edumfa@127.0.0.1:3306/edumfa
             edumfa_config_file: tests/testdata/edumfa-mariadb.cfg
             health_cmd: mariadb-admin ping -h 127.0.0.1 -uedumfa -pedumfa
-            extra_sync_args: ""
             system_deps: ""
     name: pytest ${{ matrix.database }}
     services:
@@ -128,7 +124,7 @@ jobs:
         if: matrix.system_deps != ''
         run: sudo apt-get install -y ${{ matrix.system_deps }}
       - name: Install dependencies
-        run: uv sync --group test ${{ matrix.extra_sync_args }}
+        run: uv sync --group test
       - name: Run Pytest checks against ${{ matrix.database }}
         env:
           TEST_DATABASE_URL: ${{ matrix.test_database_url }}
@@ -149,8 +145,8 @@ jobs:
         with:
           enable-cache: true
       - name: Install postgres dependencies
-        run: sudo apt-get install -y libpq-dev
+        run: sudo apt-get install -y libpq5
       - name: Install dependencies
-        run: uv sync --group test --extra postgres
+        run: uv sync --group test
       - name: Run database backend checks
         run: uv run pytest --import-mode=importlib -vs -m dbcontainer tests/test_db_backends.py

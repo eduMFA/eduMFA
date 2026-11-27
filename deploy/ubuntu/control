@@ -11,7 +11,7 @@ Replaces: python-privacyidea
 Breaks: python-privacyidea
 Conflicts: privacyidea-venv, privacyidea-appliance
 Pre-Depends: dpkg (>= 1.16.1), python3-minimal, ${misc:Pre-Depends}
-Depends: ${python:Depends}, ${misc:Depends}, python3-virtualenv
+Depends: ${python:Depends}, ${misc:Depends}, python3-virtualenv, libpq5
 X-Python-Version: >= 3.11
 Description: two-factor authentication system e.g. for OTP devices
  eduMFA: identity, multifactor authentication, authorization.
