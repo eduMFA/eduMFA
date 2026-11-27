@@ -121,6 +121,60 @@ Successful confirmation returns ``detail.push_version``. Repeating confirmation
 before the offer expires returns the same result. A fresh signed begin also
 returns ``detail.push_version`` if the token already uses the target version.
 
+Device migration
+~~~~~~~~~~~~~~~~
+
+An active, enrolled V2 token can move to a new phone while keeping its serial
+and server key. Both phones must be available. The new app generates and
+persists a fresh private key in platform-protected storage before pairing.
+The old phone continues to approve logins until the transfer completes.
+Afterwards, only the new phone can approve logins for that serial.
+
+Use the V2 signing format and send all parameters in the JSON body of
+``POST /ttype/edupush`` over verified HTTPS. Every signed array starts with
+``[operation, serial, registration_url, ...]``. Use the exact HTTPS
+registration URL configured for the token owner's enrollment policy.
+The URL is signing context. The server derives it from policy and clients
+omit it from the JSON body.
+
+* ``begin_migration`` takes a fresh ISO 8601 ``timestamp`` signed by the old
+  phone. Append ``timestamp`` to the signed array. The offer in
+  ``detail.migration`` contains ``nonce``, ``expires_at`` (Unix seconds),
+  ``registration_url`` and ``require_device_auth``. The app shows a transfer
+  QR containing the serial, URL, nonce and device authentication requirement.
+  Offers last five minutes.
+  Repeating the request while the offer is open returns the same nonce.
+* ``pair_migration`` is signed by the new key. Append ``nonce``, ``pubkey``,
+  ``fbtoken`` and the boolean ``device_auth`` in that order. Use the same public
+  key encoding as enrollment. If the offer requires device authentication,
+  the new app enables it before sending ``true``. The first valid device
+  proposal is fixed for the offer. The response gives the new app the
+  server's ``public_key`` and a six-digit ``pairing_code`` to display, including
+  leading zeros. Retrying the same proposal returns the same code.
+* ``migration_status`` appends ``nonce`` and a fresh ISO 8601 ``timestamp``.
+  The old phone can obtain the state and, once paired, the
+  ``candidate_id`` that identifies the proposed key and registration.
+  The new key can query the paired state and can check for ``completed``
+  for up to five minutes after the switch.
+* ``confirm_migration`` is signed by the old key after the user enters the
+  new phone's code and verifies with the device PIN or biometric. Append
+  ``nonce``, ``candidate_id``, ``pairing_code`` and ``device_auth`` (a boolean
+  that must be ``true``). For an incorrect code, the result value is
+  ``false``, and five incorrect attempts cancel the offer. On success the
+  server atomically replaces the device key and Firebase registration and
+  deletes existing challenges for the serial. A client that loses the
+  response can check the result with the new key.
+* ``cancel_migration`` appends only ``nonce`` and is signed by the old key.
+  Cancellation and expiry leave the enrolled device usable. Start again
+  with a fresh signed timestamp to generate a new offer.
+
+The app is responsible for performing local device authentication before
+signing the confirmation. The server verifies the signed assertion and
+device key signatures. Deployments can configure a post-event
+``UserNotification`` handler for ``edupush_migration_completed`` to notify
+the token owner using their existing contact information. A phone that
+cannot sign a transfer uses the institution's :ref:`lost_token` process.
+
 Authentication
 ~~~~~~~~~~~~~~
 

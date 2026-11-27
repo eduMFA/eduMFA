@@ -1,11 +1,13 @@
 import json
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
+from unittest.mock import patch
 
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import padding, rsa
 from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicKey
 
+from edumfa.api.ttype import _edupush_migration_completed
 from edumfa.lib.challenge import get_challenges
 from edumfa.lib.policy import ACTION, SCOPE, delete_policy, set_policy
 from edumfa.lib.realm import set_default_realm, set_realm
@@ -23,6 +25,7 @@ from edumfa.lib.tokenclass import CLIENTMODE
 from edumfa.lib.tokens.legacypushtoken import LegacyPushTokenClass
 from edumfa.lib.tokens.pushtoken import (
     POLL_ONLY,
+    PUSH_MIGRATION,
     PUSH_UPGRADE,
     PUSH_VERSION,
     PushTokenClass,
@@ -925,6 +928,254 @@ class EduPushAPITestCase(MyApiTestCase):
         response = client.get(url, query_string=poll)
         self.assertIn("token_update", response.json["detail"])
         self.assertNotIn("available_upgrade", response.json["detail"])
+
+    def test_v2_device_migration(self) -> None:
+        token = init_token(
+            {
+                "type": "edupush",
+                "genkey": 1,
+                PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG: POLL_ONLY,
+            }
+        )
+        serial = token.get_serial()
+        self.addCleanup(remove_token, serial)
+        client = self.app.test_client()
+        path = "/ttype/edupush"
+        audience = f"https://test{path}"
+        set_policy(
+            "migration-registration",
+            SCOPE.ENROLL,
+            action=f"{PushTokenClass.PUSH_ACTION.REGISTRATION_URL}={audience}",
+        )
+        self.addCleanup(delete_policy, "migration-registration")
+        set_policy(
+            "migration-device-auth",
+            SCOPE.ENROLL,
+            action=f"edupush_{ACTION.FORCE_APP_PIN}",
+        )
+        self.addCleanup(delete_policy, "migration-device-auth")
+        enrollment = client.post(
+            path,
+            json={
+                "operation": "complete_enrollment",
+                "serial": serial,
+                "enrollment_credential": token.get_tokeninfo("enrollment_credential"),
+                "pubkey": self.smartphone_public_key_pem_urlsafe,
+                "fbtoken": "old-device",
+            },
+        ).json
+        self.assertTrue(enrollment["result"]["value"])
+
+        new_key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
+        new_pubkey = strip_key(
+            new_key.public_key()
+            .public_bytes(
+                serialization.Encoding.PEM,
+                serialization.PublicFormat.SubjectPublicKeyInfo,
+            )
+            .decode("ascii")
+        )
+
+        def signed(
+            operation: str,
+            fields: dict[str, str | bool],
+            *,
+            key: rsa.RSAPrivateKey = self.smartphone_private_key,
+            endpoint: str = audience,
+        ) -> dict[str, str | bool]:
+            message = json.dumps(
+                [operation, serial, endpoint, *fields.values()], separators=(",", ":")
+            )
+            signature = key.sign(message.encode(), padding.PKCS1v15(), hashes.SHA256())
+            return {
+                "operation": operation,
+                "serial": serial,
+                **fields,
+                "signature": b32encode_and_unicode(signature),
+            }
+
+        _, _, transaction_id, _ = token.create_challenge()
+        challenge = get_challenges(serial, transaction_id)[0]
+        challenge_nonce = challenge.challenge
+        old_response = {
+            "serial": serial,
+            "nonce": challenge_nonce,
+            "signature": self._sign_device_message(f"{challenge_nonce}|{serial}"),
+        }
+        self.assertTrue(client.post(path, json=old_response).json["result"]["value"])
+
+        timestamp = datetime.now(timezone.utc).isoformat()
+        begin = signed("begin_migration", {"timestamp": timestamp})
+        first_offer = client.post(path, json=begin).json["detail"]["migration"]
+        cancel = signed("cancel_migration", {"nonce": first_offer["nonce"]})
+        self.assertEqual(
+            client.post(path, json=cancel).json["detail"]["migration"],
+            {"state": "cancelled"},
+        )
+        self.assertFalse(client.post(path, json=begin).json["result"]["status"])
+
+        timestamp = (datetime.now(timezone.utc) + timedelta(seconds=1)).isoformat()
+        begin = signed("begin_migration", {"timestamp": timestamp})
+        expired = client.post(path, json=begin).json["detail"]["migration"]
+        with patch(
+            "edumfa.lib.tokens.pushtoken.time.time", return_value=expired["expires_at"]
+        ):
+            expired_cancel = signed("cancel_migration", {"nonce": expired["nonce"]})
+            self.assertFalse(
+                client.post(path, json=expired_cancel).json["result"]["status"]
+            )
+            self.assertFalse(client.post(path, json=begin).json["result"]["status"])
+
+        timestamp = (datetime.now(timezone.utc) + timedelta(seconds=2)).isoformat()
+        begin = signed("begin_migration", {"timestamp": timestamp})
+        enable_token(serial, enable=False)
+        self.assertFalse(client.post(path, json=begin).json["result"]["status"])
+        enable_token(serial)
+        self.assertFalse(client.post(path, data=begin).json["result"]["status"])
+        with patch(
+            "edumfa.lib.tokens.pushtoken.time.time", return_value=expired["expires_at"]
+        ):
+            offer = client.post(path, json=begin).json["detail"]["migration"]
+        self.assertNotEqual(offer["nonce"], expired["nonce"])
+        self.assertEqual(
+            client.post(path, json=begin).json["detail"]["migration"], offer
+        )
+        self.assertTrue(offer["require_device_auth"])
+        self.assertEqual(offer["registration_url"], audience)
+        nonce = offer["nonce"]
+        pairing_fields = {
+            "nonce": nonce,
+            "pubkey": new_pubkey,
+            "fbtoken": "new-device",
+            "device_auth": True,
+        }
+        pair = signed("pair_migration", pairing_fields, key=new_key)
+        self.assertFalse(
+            client.post(path, json=signed("pair_migration", pairing_fields)).json[
+                "result"
+            ]["status"]
+        )
+        self.assertFalse(
+            client.post(
+                path,
+                json=signed(
+                    "pair_migration",
+                    {**pairing_fields, "device_auth": False},
+                    key=new_key,
+                ),
+            ).json["result"]["status"]
+        )
+        paired = client.post(path, json=pair).json["detail"]["migration"]
+        self.assertEqual(paired["public_key"], enrollment["detail"]["public_key"])
+        self.assertEqual(
+            client.post(path, json=pair).json["detail"]["migration"], paired
+        )
+        self.assertFalse(
+            client.post(
+                path,
+                json=signed(
+                    "pair_migration",
+                    {**pairing_fields, "fbtoken": "other"},
+                    key=new_key,
+                ),
+            ).json["result"]["status"]
+        )
+        status_fields = {"nonce": nonce, "timestamp": timestamp}
+        pending = client.post(
+            path, json=signed("migration_status", status_fields)
+        ).json["detail"]["migration"]
+        self.assertEqual(pending["state"], "paired")
+        self.assertNotIn("pairing_code", pending)
+        self.assertFalse(token.get_tokeninfo(PUSH_MIGRATION).startswith("{"))
+        self.assertEqual(token.get_tokeninfo("firebase_token"), "old-device")
+
+        confirmation_fields = {
+            "nonce": nonce,
+            "candidate_id": pending["candidate_id"],
+            "pairing_code": paired["pairing_code"],
+            "device_auth": True,
+        }
+        confirm = signed("confirm_migration", confirmation_fields)
+        self.assertFalse(
+            client.post(
+                path,
+                json=signed("confirm_migration", confirmation_fields, key=new_key),
+            ).json["result"]["status"]
+        )
+        self.assertFalse(
+            client.post(
+                path,
+                json=signed(
+                    "confirm_migration",
+                    confirmation_fields,
+                    endpoint="https://other/ttype/edupush",
+                ),
+            ).json["result"]["status"]
+        )
+        wrong_code = "000000" if paired["pairing_code"] != "000000" else "000001"
+        with patch(
+            "edumfa.api.ttype._edupush_migration_completed",
+            wraps=_edupush_migration_completed,
+        ) as event:
+            rejected = client.post(
+                path,
+                json=signed(
+                    "confirm_migration",
+                    {**confirmation_fields, "pairing_code": wrong_code},
+                ),
+            ).json
+            self.assertFalse(rejected["result"]["value"])
+            event.assert_not_called()
+            response = client.post(path, json=confirm).json
+            self.assertTrue(response["result"]["value"], response)
+            self.assertEqual(response["detail"]["migration"], {"state": "completed"})
+            self.assertFalse(client.post(path, json=confirm).json["result"]["status"])
+            event.assert_called_once()
+
+        new_status = signed("migration_status", status_fields, key=new_key)
+        self.assertEqual(
+            client.post(path, json=new_status).json["detail"]["migration"],
+            {"state": "completed"},
+        )
+        self.assertFalse(
+            client.post(path, json=signed("migration_status", status_fields)).json[
+                "result"
+            ]["status"]
+        )
+        self.assertFalse(client.post(path, json=pair).json["result"]["status"])
+        self.assertFalse(client.post(path, json=begin).json["result"]["status"])
+        self.assertFalse(client.post(path, json=old_response).json["result"]["value"])
+        self.assertEqual(get_challenges(serial, transaction_id), [])
+        self.assertEqual(token.get_tokeninfo("firebase_token"), "new-device")
+
+        old_firebase_update = {
+            "serial": serial,
+            "timestamp": timestamp,
+            "new_fb_token": "old-device",
+            "signature": self._sign_device_message(f"old-device|{serial}|{timestamp}"),
+        }
+        self.assertFalse(
+            client.post(path, json=old_firebase_update).json["result"]["status"]
+        )
+
+        _, _, fresh_transaction_id, _ = token.create_challenge()
+        fresh = get_challenges(serial, fresh_transaction_id)[0]
+        operation = "respond_to_challenge"
+        data = json.dumps(
+            [operation, serial, fresh.challenge, False], separators=(",", ":")
+        )
+        response = client.post(
+            path,
+            json={
+                "operation": operation,
+                "serial": serial,
+                "nonce": fresh.challenge,
+                "signature": b32encode_and_unicode(
+                    new_key.sign(data.encode(), padding.PKCS1v15(), hashes.SHA256())
+                ),
+            },
+        )
+        self.assertTrue(response.json["result"]["value"])
 
     def test_00_create_realms(self):
         self.setUp_user_realms()

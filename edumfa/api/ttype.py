@@ -37,7 +37,7 @@ import json
 import logging
 import threading
 
-from flask import Blueprint, current_app, g, jsonify, request
+from flask import Blueprint, Response, current_app, g, jsonify, request
 
 from edumfa.api.lib.utils import get_all_params
 from edumfa.lib.audit import getAudit
@@ -49,6 +49,7 @@ from edumfa.lib.config import (
     get_token_class,
 )
 from edumfa.lib.error import ParameterError
+from edumfa.lib.event import EventConfiguration, event
 from edumfa.lib.policy import PolicyClass
 from edumfa.lib.user import get_user_from_param
 from edumfa.lib.utils import get_client_ip
@@ -122,7 +123,21 @@ def token(ttype=None):
         }
     )
     if res[0] == "json":
-        return jsonify(res[1])
+        response = jsonify(res[1])
+        migration = getattr(g, "edupush_migration", None)
+        if migration is not None:
+            operation, success = migration
+            g.audit_object.log({"action_detail": operation, "success": success})
+            response.cache_control.no_store = True
+            if operation == "confirm_migration" and success:
+                request.User = user
+                request.all_data = {"serial": serial, "operation": operation}
+                g.event_config = EventConfiguration()
+                try:
+                    return _edupush_migration_completed(response)
+                except Exception:
+                    log.exception("An eduPush migration completion handler failed.")
+        return response
     elif res[0] in ["html", "plain"]:
         return current_app.response_class(res[1], mimetype=f"text/{res[0]}")
     elif len(res) == 2:
@@ -133,3 +148,8 @@ def token(ttype=None):
         return current_app.response_class(
             res[1], mimetype="application/octet-binary", headers=res[2]
         )
+
+
+@event("edupush_migration_completed", request, g)
+def _edupush_migration_completed(response: Response) -> Response:
+    return response
