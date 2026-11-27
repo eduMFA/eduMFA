@@ -1247,7 +1247,9 @@ msgstr "Zweiten OTP-Wert eingeben"
 
 #: components/token/controllers/tokenDetailController.js
 msgid "Enter the PIN (if set) and confirm with your WebAuthn authenticator."
-msgstr "Geben Sie die PIN ein (falls gesetzt) und bestätigen Sie mit Ihrem WebAuthn-Authenticator."
+msgstr ""
+"Geben Sie die PIN ein (falls gesetzt) und bestätigen Sie mit Ihrem WebAuthn-"
+"Authenticator."
 
 #: components/token/views/token.enroll.daypassword.html
 msgid "Enter the secret..."
