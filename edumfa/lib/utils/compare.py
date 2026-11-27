@@ -71,7 +71,7 @@ def parse_comma_separated_string(input_string):
             escapechar="\\",
         )
         rows = list(reader)
-    except csv.Error as exx:
+    except csv.Error:
         raise CompareError(f"Malformed comma-separated value: {input_string!r}")
     return rows[0]
 
@@ -161,7 +161,7 @@ def negate(func):
 #: This class enumerates all available comparators.
 #: In order to add a comparator to this module, add a suitable member to COMPARATORS
 #: and suitable entries to COMPARATOR_FUNCTIONS and COMPARATOR_DESCRIPTIONS.
-class COMPARATORS:
+class Comparators:
     EQUALS = "equals"
     NOT_EQUALS = "!equals"
 
@@ -177,53 +177,102 @@ class COMPARATORS:
     SMALLER = "<"
     BIGGER = ">"
 
+    # The original privacyIDEA patch blanket-disallows empty right values.
+    # eduMFA can't do this on a non-major version. For now, only disallow
+    # BIGGER/SMALLER comparators, as they just crash with an empty right value.
+    # For other comparators this either makes sense:
+    # - (NOT_)EQUALS and (NOT_)MATCHES compare to an empty string
+    # - (NOT_)CONTAINS checks if the provided list has an empty string (which is
+    #   maybe slightly confusing in the WebUI)
+    # or does not hurt:
+    # - (NOT_)IN returns always true/false
+    COMPARATORS_ALLOWING_EMPTY_VALUE = (
+        EQUALS,
+        NOT_EQUALS,
+        CONTAINS,
+        NOT_CONTAINS,
+        MATCHES,
+        NOT_MATCHES,
+        IN,
+        NOT_IN,
+    )
+
+    @classmethod
+    def allows_empty_value(cls, comparator):
+        """
+        Return True if an empty string is allowed as right-hand side value for the
+        given comparator.
+        """
+        return comparator in cls.COMPARATORS_ALLOWING_EMPTY_VALUE
+
+    @classmethod
+    def get_all_comparators(cls):
+        """
+        Return a list of all comparators.
+        """
+        return [
+            cls.EQUALS,
+            cls.NOT_EQUALS,
+            cls.CONTAINS,
+            cls.NOT_CONTAINS,
+            cls.MATCHES,
+            cls.NOT_MATCHES,
+            cls.IN,
+            cls.NOT_IN,
+            cls.SMALLER,
+            cls.BIGGER,
+        ]
+
 
 #: This dictionary connects comparators to comparator functions.
 #: A comparison function takes three parameters ``left``, ``comparator``, ``right``.
 COMPARATOR_FUNCTIONS = {
-    COMPARATORS.EQUALS: _compare_equality,
-    COMPARATORS.NOT_EQUALS: negate(_compare_equality),
-    COMPARATORS.CONTAINS: _compare_contains,
-    COMPARATORS.NOT_CONTAINS: negate(_compare_contains),
-    COMPARATORS.MATCHES: _compare_matches,
-    COMPARATORS.NOT_MATCHES: negate(_compare_matches),
-    COMPARATORS.IN: _compare_in,
-    COMPARATORS.NOT_IN: negate(_compare_in),
-    COMPARATORS.SMALLER: _compare_smaller,
-    COMPARATORS.BIGGER: _compare_bigger,
+    Comparators.EQUALS: _compare_equality,
+    Comparators.NOT_EQUALS: negate(_compare_equality),
+    Comparators.CONTAINS: _compare_contains,
+    Comparators.NOT_CONTAINS: negate(_compare_contains),
+    Comparators.MATCHES: _compare_matches,
+    Comparators.NOT_MATCHES: negate(_compare_matches),
+    Comparators.IN: _compare_in,
+    Comparators.NOT_IN: negate(_compare_in),
+    Comparators.SMALLER: _compare_smaller,
+    Comparators.BIGGER: _compare_bigger,
 }
-
 
 #: This dictionary connects comparators to their human-readable (and translated) descriptions.
 COMPARATOR_DESCRIPTIONS = {
-    COMPARATORS.CONTAINS: _(
+    Comparators.CONTAINS: _(
         "true if the value of the left attribute contains the right value"
     ),
-    COMPARATORS.NOT_CONTAINS: _(
+    Comparators.NOT_CONTAINS: _(
         "false if the value of the left attribute contains the right value"
     ),
-    COMPARATORS.EQUALS: _(
+    Comparators.EQUALS: _(
         "true if the value of the left attribute equals the right value"
     ),
-    COMPARATORS.NOT_EQUALS: _(
+    Comparators.NOT_EQUALS: _(
         "false if the value of the left attribute equals the right value"
     ),
-    COMPARATORS.MATCHES: _(
-        "true if the value of the left attribute completely matches the given regular expression pattern on the right"
+    Comparators.MATCHES: _(
+        "true if the value of the left attribute completely matches the given regular expression "
+        "pattern on the right"
     ),
-    COMPARATORS.NOT_MATCHES: _(
-        "false if the value of the left attribute completely matches the given regular expression pattern on the right"
+    Comparators.NOT_MATCHES: _(
+        "false if the value of the left attribute completely matches the given regular "
+        "expression pattern on the right"
     ),
-    COMPARATORS.IN: _(
-        "true if the value of the left attribute is contained in the comma-separated values on the right"
+    Comparators.IN: _(
+        "true if the value of the left attribute is contained in the comma-separated values on the "
+        "right"
     ),
-    COMPARATORS.NOT_IN: _(
-        "false if the value of the left attribute is contained in the comma-separated values on the right"
+    Comparators.NOT_IN: _(
+        "false if the value of the left attribute is contained in the comma-separated values on the "
+        "right"
     ),
-    COMPARATORS.SMALLER: _(
+    Comparators.SMALLER: _(
         "true if the integer value of the left attribute is smaller than the right integer value"
     ),
-    COMPARATORS.BIGGER: _(
+    Comparators.BIGGER: _(
         "true if the integer value of the left attribute is bigger than the right integer value"
     ),
 }

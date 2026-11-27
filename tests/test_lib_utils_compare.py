@@ -3,6 +3,7 @@ This tests the module lib.utils.compare
 """
 
 from edumfa.lib.utils.compare import (
+    Comparators,
     CompareError,
     compare_values,
     parse_comma_separated_string,
@@ -42,6 +43,17 @@ class UtilsCompareTestCase(MyTestCase):
         with self.assertRaises(CompareError) as cm:
             compare_values("hello world", "something", "hello")
         self.assertIn("Invalid comparator", repr(cm.exception))
+
+    def test_03b_allows_empty_value(self):
+        # all comparators except < and > allow an empty right-hand side value
+        # (< and > would crash with int(""))
+        for comparator in Comparators.get_all_comparators():
+            self.assertEqual(
+                comparator not in [Comparators.SMALLER, Comparators.BIGGER],
+                Comparators.allows_empty_value(comparator),
+            )
+        self.assertNotIn(Comparators.SMALLER, Comparators.COMPARATORS_ALLOWING_EMPTY_VALUE)
+        self.assertNotIn(Comparators.BIGGER, Comparators.COMPARATORS_ALLOWING_EMPTY_VALUE)
 
     def test_04_compare_matches(self):
         self.assertTrue(compare_values("hello world", "matches", "hello world"))

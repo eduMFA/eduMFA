@@ -7,6 +7,8 @@
         <th translate>Key</th>
         <th translate>Comparator</th>
         <th translate>Value</th>
+        <th translate>Handle Missing Data</th>
+        <th></th>
       </tr>
     </thead>
     <tr ng-repeat="condition in policyConditions">
@@ -70,6 +72,25 @@
           <input type="text" ng-model="condition[3]" class="form-control" />
         </span>
       </td>
+      <td>
+        <span ng-show="editIndex != $index">
+          <code
+            title="{{ conditionDefs.handle_missing_data[condition[5]].description }}"
+            >{{ condition[5] }}</code
+          >
+        </span>
+        <span ng-show="editIndex == $index">
+          <select ng-model="condition[5]" class="form-control">
+            <option
+              ng-repeat="(key, value) in conditionDefs.handle_missing_data"
+              ng-value="key"
+              title="{{ value.description }}"
+            >
+              {{ value.display_value }}
+            </option>
+          </select>
+        </span>
+      </td>
       <td style="text-align: right">
         <button
           ng-show="editIndex != $index"
@@ -94,7 +115,7 @@
       </td>
     </tr>
     <tr>
-      <td colspan="6">
+      <td colspan="7">
         <button class="btn btn-default" ng-click="addCondition()">
           <span class="glyphicon glyphicon-plus"></span>
           <span translate>Add a condition</span>
