@@ -1878,9 +1878,8 @@ msgid "Loading Machines..."
 msgstr "Cargando Máquinas..."
 
 #: components/dashboard/views/dashboard.html
-#, fuzzy
 msgid "Loading metrics…"
-msgstr "Cargando secuencias..."
+msgstr ""
 
 #: components/directives/views/directive.assigntoken.html
 #: components/directives/views/directive.attachtoken.html
@@ -1996,9 +1995,8 @@ msgid "Metrics could not be loaded."
 msgstr ""
 
 #: components/dashboard/views/dashboard.html
-#, fuzzy
 msgid "Metrics:"
-msgstr "Reintentos"
+msgstr ""
 
 #: components/config/views/config.caconnectors.microsoft.html
 msgid "Microsoft CA worker hostname"

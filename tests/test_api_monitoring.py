@@ -38,7 +38,7 @@ class APIMonitoringTestCase(MyApiTestCase):
 
     def test_get_stats_by_query_key_with_slash(self) -> None:
         stats_key = "auth/success"
-        start = datetime.datetime(2026, 1, 1, tzinfo=datetime.timezone.utc)
+        start = datetime.datetime(2026, 1, 1, tzinfo=datetime.UTC)
         for index, value in enumerate((1, 10, 1, 2)):
             write_stats(
                 stats_key, value, timestamp=start + datetime.timedelta(seconds=index)

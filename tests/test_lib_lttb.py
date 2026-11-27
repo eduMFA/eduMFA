@@ -35,7 +35,7 @@ class LTTBTestCase(unittest.TestCase):
         self.assertIn((15, 10), lttb(points, 13))
 
     def test_custom_x_key(self) -> None:
-        start = datetime.datetime(2026, 1, 1, tzinfo=datetime.timezone.utc)
+        start = datetime.datetime(2026, 1, 1, tzinfo=datetime.UTC)
         points = [
             (start + datetime.timedelta(minutes=index), index % 2)
             for index in range(10)
