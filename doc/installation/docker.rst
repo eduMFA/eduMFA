@@ -183,6 +183,7 @@ optional are required for eduMFA to work.
 - SUPERUSER_REALM: a comma-separated list of realms which should be superuser realms (optional, default: ``super,administrators``)
 - SQLALCHEMY_ENGINE_OPTIONS: a string containing a Python dictionary with SQLAlchemy engine options, see :ref:`cfgfile` (optional)
 - EDUMFA_AUDIT_SQL_OPTIONS: a string containing a Python dictionary with SQLAlchemy engine options for your audit database, see :ref:`cfgfile` (optional)
+- EDUMFA_LDAP_POOLING_LOOP_TIMEOUT: amount of time to wait for the next round on an empty LDAP server pool, see :ref:`ldap_server_pools` (optional)
 - EDUMFA_LDAP_RESTARTABLE_SLEEPTIME: amount of time to sleep before retrying an LDAP request, see :ref:`ldap_server_pools` (optional)
 - EDUMFA_CSS: URL of custom css stylesheet (optional)
 - EDUMFA_LOGO: filename of custom logo (optional)

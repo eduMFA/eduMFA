@@ -68,6 +68,25 @@ def str_to_dict(data: str, option: str) -> dict[str, Any]:
     return data
 
 
+def str_to_int(data: str, option: str) -> int:
+    """
+    Parses a string into a non-negative int.
+
+    :param data: The string to convert to a non-negative int.
+    :param option: The eduMFA option this is parsing.
+    :return: The string parsed as integer.
+    :raises ValueError: If the content of the string is not an integer or
+        negative.
+    """
+    try:
+        data = int(data)
+    except ValueError:
+        raise ValueError(f"{option!r} is not an integer.")
+    if data < 0:
+        raise ValueError(f"{option!r} must be non-negative.")
+    return data
+
+
 def str_to_float(data: str, option: str) -> float:
     """
     Parses a string into a non-negative float.
@@ -107,6 +126,10 @@ if sqlalchemy_options_audit := get_var("EDUMFA_AUDIT_SQL_OPTIONS", ""):
     EDUMFA_AUDIT_SQL_OPTIONS = str_to_dict(
         sqlalchemy_options_audit, "EDUMFA_AUDIT_SQL_OPTIONS"
     )
+loop_timeout = get_var("EDUMFA_LDAP_POOLING_LOOP_TIMEOUT", "10")
+EDUMFA_LDAP_POOLING_LOOP_TIMEOUT = str_to_int(
+    loop_timeout, "EDUMFA_LDAP_POOLING_LOOP_TIMEOUT"
+)
 sleeptime = get_var("EDUMFA_LDAP_RESTARTABLE_SLEEPTIME", "2.0")
 EDUMFA_LDAP_RESTARTABLE_SLEEPTIME = str_to_float(
     sleeptime, "EDUMFA_LDAP_RESTARTABLE_SLEEPTIME"
