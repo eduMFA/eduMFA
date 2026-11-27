@@ -57,7 +57,7 @@ class ConfigTestCase(MyTestCase):
             scope=SCOPE.ENROLL,
             action={
                 ACTION.APPIMAGEURL: "https://example.org/image.png",
-                "edupush_force_app_pin": True,
+                f"edupush_{ACTION.FORCE_APP_PIN}": True,
                 PushTokenClass.PUSH_ACTION.REGISTRATION_URL: "https://example.org/ttype/edupush",
                 "hotp_2step_serversize": "20",
                 f"push_{ACTION.MAXTOKENUSER}": "2",
