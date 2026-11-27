@@ -64,7 +64,25 @@ def str_to_dict(data: str, option: str) -> dict[str, Any]:
     """
     data = literal_eval(data)
     if not isinstance(data, dict):
-        raise ValueError(f"{option} value is not a Python dictionary.")
+        raise ValueError(f"{option!r} is not a Python dictionary.")
+    return data
+
+
+def str_to_float(data: str, option: str) -> float:
+    """
+    Parses a string into a non-negative float.
+
+    :param data: The string to convert to a non-negative float.
+    :param option: The eduMFA option this is parsing.
+    :return: The string parsed as float.
+    :raises ValueError: If the content of the string is not a float or negative.
+    """
+    try:
+        data = float(data)
+    except ValueError:
+        raise ValueError(f"{option!r} is not a float.")
+    if data < 0:
+        raise ValueError(f"{option!r} must be non-negative.")
     return data
 
 
@@ -89,7 +107,10 @@ if sqlalchemy_options_audit := get_var("EDUMFA_AUDIT_SQL_OPTIONS", ""):
     EDUMFA_AUDIT_SQL_OPTIONS = str_to_dict(
         sqlalchemy_options_audit, "EDUMFA_AUDIT_SQL_OPTIONS"
     )
-EDUMFA_LDAP_RESTARTABLE_SLEEPTIME = float(get_var("EDUMFA_LDAP_RESTARTABLE_SLEEPTIME", "2.0"))
+sleeptime = get_var("EDUMFA_LDAP_RESTARTABLE_SLEEPTIME", "2.0")
+EDUMFA_LDAP_RESTARTABLE_SLEEPTIME = str_to_float(
+    sleeptime, "EDUMFA_LDAP_RESTARTABLE_SLEEPTIME"
+)
 if edumfa_logo := get_var("EDUMFA_LOGO", ""):
     EDUMFA_LOGO = edumfa_logo
 if edumfa_page_title := get_var("EDUMFA_PAGE_TITLE", ""):
